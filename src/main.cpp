@@ -13,8 +13,21 @@ int main(int argc, char** args){
 
     window = SDL_CreateWindow( "game", 
     	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    		win_h, win_h, 0);
-    while(1){
+    		win_h, win_h,
+            0   // 0 means no flags
+            );
+    renderer = SDL_CreateRenderer(window,
+        -1, // -1 means to init the first driver that supports the flags
+        0   // 0 means no flags
+        );
+
+    bool running = true;
+    while(running){
+        SDL_Event e;
+        while(SDL_PollEvent(&e)) {
+            if(e.type == SDL_QUIT)
+                running = false;
+        }
 
     }
     SDL_Quit();
