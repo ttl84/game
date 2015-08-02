@@ -3,17 +3,17 @@
 #include <iostream>
 
 //Screen Dimension Constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int win_w = 640;
+const int win_h = 480;
 
-int main(int argc, char* args[]){
+int main(int argc, char** args){
 	SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window * window = NULL;
     SDL_Renderer* renderer = NULL;
 
-    window = SDL_CreateWindow( "SDL Tutorial", 
+    window = SDL_CreateWindow( "game", 
     	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    		SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+    		win_h, win_h, 0);
     while(1){
 
     }
