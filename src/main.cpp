@@ -11,12 +11,15 @@ int main(int argc, char** args){
     SDL_Window * window = NULL;
     SDL_Renderer* renderer = NULL;
 
-    window = SDL_CreateWindow( "game", 
-    	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    		win_h, win_h,
-            0   // 0 means no flags
-            );
-    renderer = SDL_CreateRenderer(window,
+    window = SDL_CreateWindow(
+        "game", 
+    	SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        win_h, win_h,
+        0   // 0 means no flags
+        );
+    renderer = SDL_CreateRenderer(
+        window,
         -1, // -1 means to init the first driver that supports the flags
         0   // 0 means no flags
         );
