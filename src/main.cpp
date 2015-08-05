@@ -8,10 +8,9 @@ const int win_h = 480;
 
 int main(int argc, char** args){
 	SDLState sdl;
-	SDL_Window * window = NULL;
 	SDL_Renderer* renderer = NULL;
 
-	window = SDL_CreateWindow(
+	SDLWindow window(
 		"game", 
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
@@ -19,7 +18,7 @@ int main(int argc, char** args){
 		0   // 0 means no flags
 		);
 	renderer = SDL_CreateRenderer(
-		window,
+		window.ptr(),
 		-1, // -1 means to init the first driver that supports the flags
 		0   // 0 means no flags
 		);
@@ -34,6 +33,5 @@ int main(int argc, char** args){
 
 	}
 	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
 	return 0;
 }
