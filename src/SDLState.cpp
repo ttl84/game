@@ -1,6 +1,52 @@
 #include "SDLState.h"
 #include <iostream>
 
+SDLRenderer::SDLRenderer()
+{
+	data = 0;
+}
+SDLRenderer::SDLRenderer(SDL_Window * window,
+		int index,
+		unsigned flags)
+{
+	data = SDL_CreateRenderer(window, index, flags);
+	if(data == 0) {
+		std::cerr << SDL_GetError() << std::endl;
+	}
+}
+SDLRenderer::SDLRenderer(SDLRenderer&& r)
+{
+	data = r.data;
+	r.data = 0;
+}
+SDLRenderer::~SDLRenderer()
+{
+	if(data != 0) {
+		SDL_DestroyRenderer(data);
+		data = 0;
+	}
+}
+
+const SDLRenderer&
+SDLRenderer::operator=(SDLRenderer&& r)
+{
+	if(data != 0) {
+		SDL_DestroyRenderer(data);
+	}
+	data = r.data;
+	r.data = 0;
+	return *this;
+}
+
+bool SDLRenderer::isGood() const
+{
+	return data != 0;
+}
+
+SDL_Renderer* SDLRenderer::ptr()
+{
+	return data;
+}
 SDLWindow::SDLWindow(char const* name,
 		int x,
 		int y,

@@ -4,6 +4,30 @@
 #define SDLSTATE_H
 #include "SDL2/SDL.h"
 
+class SDLRenderer {
+	SDL_Renderer * data;
+public:
+	SDLRenderer();
+	SDLRenderer(SDL_Window *,
+		int index,
+		unsigned flags);
+	SDLRenderer(SDLRenderer&&);
+	SDLRenderer(const SDLRenderer&) = delete;
+
+	~SDLRenderer();
+
+	const SDLRenderer&
+	operator=(SDLRenderer&&);
+
+	const SDLRenderer&
+	operator=(const SDLRenderer&) = delete;
+
+	bool isGood() const;
+
+	SDL_Renderer* ptr();
+	
+};
+
 class SDLWindow {
 	SDL_Window * data;
 public:
