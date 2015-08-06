@@ -1,5 +1,4 @@
-//Include SDL functions and datatypes
-#include "SDLState.h"
+#include "sdlwrapper.h"
 #include <iostream>
 
 //Screen Dimension Constants
@@ -8,8 +7,9 @@ const int win_h = 480;
 
 int main(int argc, char** args){
 	SDLState sdl;
-
+	SDLVideoSystem video;
 	SDLWindow window(
+		video,
 		"game", 
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
@@ -17,7 +17,7 @@ int main(int argc, char** args){
 		0   // 0 means no flags
 		);
 	SDLRenderer renderer(
-		window.ptr(),
+		window,
 		-1, // -1 means to init the first driver that supports the flags
 		0   // 0 means no flags
 		);
