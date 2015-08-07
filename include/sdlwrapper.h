@@ -59,6 +59,7 @@ class SDLTexture {
 public:
 	SDLTexture(SDLRenderer & , char const * name);
 	~SDLTexture();
+	bool isGood() const;
 };
 
 

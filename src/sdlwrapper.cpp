@@ -122,6 +122,23 @@ SDL_Renderer* SDLRenderer::ptr()
 
 SDLTexture::SDLTexture(SDLRenderer & renderer,
 	char const * name)
+:data(0)
 {
+	SDL_Surface * surface = IMG_Load(name);
+	if(surface != 0) {
+		data = SDL_CreateTextureFromSurface(
+			renderer.ptr(), surface);
+		SDL_FreeSurface(surface);
+	}
+}
 
+SDLTexture::~SDLTexture()
+{
+	if(data != 0) {
+		SDL_DestroyTexture(data);
+	}
+}
+bool SDLTexture::isGood() const
+{
+	return data != 0;
 }
