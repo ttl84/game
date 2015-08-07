@@ -1,6 +1,6 @@
 #include "sdlwrapper.h"
 #include <iostream>
-
+#include "world.h"
 //Screen Dimension Constants
 const int win_w = 640;
 const int win_h = 480;
@@ -21,6 +21,7 @@ int main(int argc, char** args){
 		-1, // -1 means to init the first driver that supports the flags
 		0   // 0 means no flags
 		);
+
 
 	bool running = true;
 	while(running){
