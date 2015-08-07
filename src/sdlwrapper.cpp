@@ -50,18 +50,20 @@ bool SDLVideoSystem::isGood() const
 }
 
 
-SDLWindow::SDLWindow(const SDLVideoSystem& video,
+SDLWindow::SDLWindow(
+	SDLVideoSystem& video,
 	char const* name,
 	int x,
 	int y,
 	int w,
 	int h,
 	unsigned flags)
+:data(0)
 {
-	if(video.isGood())
+	if(video.isGood()) {
 		data = SDL_CreateWindow(name, x, y, w, h, flags);
-	else
-		data = 0;
+	}
+	
 	if(data == 0) {
 		std::cerr << SDL_GetError() << std::endl;
 	}
@@ -85,18 +87,19 @@ SDL_Window* SDLWindow::ptr()
 	return data;
 }
 
-SDLRenderer::SDLRenderer(SDLWindow & window,
-		int index,
-		unsigned flags)
+SDLRenderer::SDLRenderer(
+	SDLWindow & window,
+	int index,
+	unsigned flags)
+:data(0)
 {
 	if(window.isGood()) {
 		data = SDL_CreateRenderer(
 			window.ptr(),
 			index,
 			flags);
-	} else {
-		data = 0;
 	}
+
 	if(data == 0) {
 		std::cerr << SDL_GetError() << std::endl;
 	}
@@ -120,7 +123,8 @@ SDL_Renderer* SDLRenderer::ptr()
 	return data;
 }
 
-SDLTexture::SDLTexture(SDLRenderer & renderer,
+SDLTexture::SDLTexture(
+	SDLRenderer & renderer,
 	char const * name)
 :data(0)
 {

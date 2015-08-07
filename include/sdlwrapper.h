@@ -25,7 +25,8 @@ public:
 class SDLWindow {
 	SDL_Window * data;
 public:
-	SDLWindow(const SDLVideoSystem&,
+	SDLWindow(
+		SDLVideoSystem&,
 		char const* name,
 		int x,
 		int y,
@@ -42,7 +43,8 @@ public:
 class SDLRenderer {
 	SDL_Renderer * data;
 public:
-	SDLRenderer(SDLWindow &,
+	SDLRenderer(
+		SDLWindow &,
 		int index,
 		unsigned flags);
 
