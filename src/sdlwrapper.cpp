@@ -63,7 +63,7 @@ SDLWindow::SDLWindow(
 	if(video.isGood()) {
 		data = SDL_CreateWindow(name, x, y, w, h, flags);
 	}
-	
+
 	if(data == 0) {
 		std::cerr << SDL_GetError() << std::endl;
 	}
@@ -107,6 +107,9 @@ SDLRenderer::SDLRenderer(
 
 SDLRenderer::~SDLRenderer()
 {
+	for(auto & p : textures) {
+		SDL_DestroyTexture(p.second);
+	}
 	if(data != 0) {
 		SDL_DestroyRenderer(data);
 		data = 0;
@@ -123,26 +126,31 @@ SDL_Renderer* SDLRenderer::ptr()
 	return data;
 }
 
-SDLTexture::SDLTexture(
-	SDLRenderer & renderer,
-	char const * name)
-:data(0)
+SDL_Texture* SDLRenderer::load(char const * name)
 {
+	auto it = textures.find(name);
+	if(it != textures.end()) {
+		return it->second;
+	}
+
+	SDL_Texture * texture = 0;
 	SDL_Surface * surface = IMG_Load(name);
 	if(surface != 0) {
-		data = SDL_CreateTextureFromSurface(
-			renderer.ptr(), surface);
+		texture = SDL_CreateTextureFromSurface(
+			data, surface);
 		SDL_FreeSurface(surface);
 	}
+	if(texture != 0) {
+		textures.emplace(name, texture);
+	}
+	return texture;
 }
 
-SDLTexture::~SDLTexture()
+void SDLRenderer::unload(char const* name)
 {
-	if(data != 0) {
-		SDL_DestroyTexture(data);
+	auto it = textures.find(name);
+	if(it != textures.end()) {
+		SDL_DestroyTexture(it->second);
+		textures.erase(it);
 	}
-}
-bool SDLTexture::isGood() const
-{
-	return data != 0;
 }

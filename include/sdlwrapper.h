@@ -3,6 +3,7 @@
 #ifndef SDLWRAPPER_H
 #define SDLWRAPPER_H
 #include "SDL2/SDL.h"
+#include <map>
 
 class SDLState{
 public:
@@ -42,6 +43,7 @@ public:
 
 class SDLRenderer {
 	SDL_Renderer * data;
+	std::map<std::string, SDL_Texture*> textures;
 public:
 	SDLRenderer(
 		SDLWindow &,
@@ -54,15 +56,12 @@ public:
 
 	SDL_Renderer* ptr();
 	
+	// create a texture.
+	// The renderer is responsible for allocating and freeing memory.
+	SDL_Texture * load(char const * name);
+	void unload(char const * name);
 };
 
-class SDLTexture {
-	SDL_Texture * data;
-public:
-	SDLTexture(SDLRenderer & , char const * name);
-	~SDLTexture();
-	bool isGood() const;
-};
 
 
 #endif
