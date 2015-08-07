@@ -2,23 +2,23 @@
 #define Vec2_H
 #include <cmath>
 struct Vec2{
-	float x, y;
+	double x, y;
 };
 
 inline
-Vec2 Vec2FromAngle(float rad)
+Vec2 Vec2FromAngle(double rad)
 {
 	return Vec2{cos(rad), sin(rad)};
 }
 
 inline
-float Vec2Length(Vec2 v)const
+double Vec2Length(Vec2 v)
 {
 	return sqrt(v.x * v.x + v.y * v.y);
 }
 
 inline
-float Vec2Angle(Vec2 v)const
+double Vec2Angle(Vec2 v)
 {
 	return atan2(v.y, v.x);
 }
@@ -56,38 +56,38 @@ Vec2 operator-(Vec2 a)
 }
 
 inline
-Vec2 operator*(Vec2 a, float k)
+Vec2 operator*(Vec2 a, double k)
 {
 	return Vec2{a.x * k, a.y * k};
 }
 
 inline
-Vec2 operator*(float k, Vec2 a)
+Vec2 operator*(double k, Vec2 a)
 {
 	return Vec2{a.x * k, a.y * k};
 }
 
 inline
-void operator *=(Vec2 & a, float k)
+void operator *=(Vec2 & a, double k)
 {
 	a.x *= k;
 	a.y *= k;
 }
 
 inline
-Vec2 operator/(Vec2 a, float k)
+Vec2 operator/(Vec2 a, double k)
 {
 	return Vec2{a.x / k, a.y / k};
 }
 
 inline
-Vec2 operator/(float k, Vec2 a)
+Vec2 operator/(double k, Vec2 a)
 {
 	return Vec2{k / a.x,  k / a.y};
 }
 
 inline
-void operator /=(Vec2 & a, float k)
+void operator /=(Vec2 & a, double k)
 {
 	a.x /= k;
 	a.y /= k;

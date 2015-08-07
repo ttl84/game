@@ -10,8 +10,12 @@ public:
 	~SDLState();
 };
 
+// This class initializes both
+// SDL's Video subsystem and
+// the SDL_Image library
 class SDLVideoSystem {
-	bool good;
+	bool videoGood;
+	bool imgGood;
 public:
 	SDLVideoSystem();
 	~SDLVideoSystem();
@@ -50,7 +54,12 @@ public:
 	
 };
 
-
+class SDLTexture {
+	SDL_Texture * data;
+public:
+	SDLTexture(SDLRenderer & , char const * name);
+	~SDLTexture();
+};
 
 
 #endif

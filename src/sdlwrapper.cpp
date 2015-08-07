@@ -1,4 +1,5 @@
 #include "sdlwrapper.h"
+#include "SDL2/SDL_Image.h"
 #include <iostream>
 SDLState::SDLState()
 {
@@ -16,21 +17,36 @@ SDLState::~SDLState()
 
 SDLVideoSystem::SDLVideoSystem()
 {
-	int res = SDL_VideoInit(0);
-	if(res == 0) {
-		good = true;
+	int res1 = SDL_VideoInit(0);
+	int flags = IMG_INIT_PNG;
+	int res2 = IMG_Init(flags);
+
+	if(res1 == 0) {
+		videoGood = true;
 	} else {
 		std::cerr << SDL_GetError() << std::endl;
-		good = false;
+		videoGood = false;
+	}
+
+	if(res2 == flags) {
+		imgGood = true;
+	} else {
+		std::cerr << "error: failed to init SDL_image\n";
+		imgGood = false;
 	}
 }
 SDLVideoSystem::~SDLVideoSystem()
 {
-	SDL_VideoQuit();
+	if(videoGood) {
+		SDL_VideoQuit();
+	}
+	if(imgGood) {
+		IMG_Quit();
+	}
 }
 bool SDLVideoSystem::isGood() const
 {
-	return good;
+	return videoGood && imgGood;
 }
 
 
@@ -104,3 +120,8 @@ SDL_Renderer* SDLRenderer::ptr()
 	return data;
 }
 
+SDLTexture::SDLTexture(SDLRenderer & renderer,
+	char const * name)
+{
+
+}

@@ -12,7 +12,7 @@ file(GLOB SOURCES "src/*.cpp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors -Wall")
 
 # set libraries to link
-set(LIBS SDL2main SDL2)
+set(LIBS SDL2main SDL2 SDL2_image)
 if(MINGW)
 	set(LIBS mingw32 ${LIBS})
 	message(STATUS "MinGW is detected. Prepending -lmingw32 to link libraries.")
