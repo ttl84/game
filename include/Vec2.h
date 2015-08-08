@@ -2,25 +2,25 @@
 #define Vec2_H
 #include <cmath>
 struct Vec2{
-	double x, y;
+	float x, y;
 };
 
 inline
-Vec2 Vec2FromAngle(double rad)
+Vec2 Vec2FromAngle(float rad)
 {
-	return Vec2{cos(rad), sin(rad)};
+	return Vec2{std::cos(rad), std::sin(rad)};
 }
 
 inline
-double Vec2Length(Vec2 v)
+float Vec2Length(Vec2 v)
 {
-	return sqrt(v.x * v.x + v.y * v.y);
+	return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
 inline
-double Vec2Angle(Vec2 v)
+float Vec2Angle(Vec2 v)
 {
-	return atan2(v.y, v.x);
+	return std::atan2(v.y, v.x);
 }
 
 inline
@@ -56,38 +56,38 @@ Vec2 operator-(Vec2 a)
 }
 
 inline
-Vec2 operator*(Vec2 a, double k)
+Vec2 operator*(Vec2 a, float k)
 {
 	return Vec2{a.x * k, a.y * k};
 }
 
 inline
-Vec2 operator*(double k, Vec2 a)
+Vec2 operator*(float k, Vec2 a)
 {
 	return Vec2{a.x * k, a.y * k};
 }
 
 inline
-void operator *=(Vec2 & a, double k)
+void operator *=(Vec2 & a, float k)
 {
 	a.x *= k;
 	a.y *= k;
 }
 
 inline
-Vec2 operator/(Vec2 a, double k)
+Vec2 operator/(Vec2 a, float k)
 {
 	return Vec2{a.x / k, a.y / k};
 }
 
 inline
-Vec2 operator/(double k, Vec2 a)
+Vec2 operator/(float k, Vec2 a)
 {
 	return Vec2{k / a.x,  k / a.y};
 }
 
 inline
-void operator /=(Vec2 & a, double k)
+void operator /=(Vec2 & a, float k)
 {
 	a.x /= k;
 	a.y /= k;
