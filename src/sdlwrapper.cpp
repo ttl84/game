@@ -154,3 +154,16 @@ void SDLRenderer::unload(char const* name)
 		textures.erase(it);
 	}
 }
+
+SDLTimer::SDLTimer()
+:begin(0), end(0)
+{
+}
+
+unsigned SDLTimer::lap()
+{
+	end = SDL_GetTicks();
+	unsigned diff = end - begin;
+	begin = end;
+	return diff;
+}

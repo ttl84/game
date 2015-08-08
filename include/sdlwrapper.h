@@ -62,6 +62,12 @@ public:
 	void unload(char const * name);
 };
 
-
+class SDLTimer {
+	unsigned begin;
+	unsigned end;
+public:
+	SDLTimer();
+	unsigned lap();
+};
 
 #endif
