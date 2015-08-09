@@ -4,7 +4,18 @@
 //Screen Dimension Constants
 const int win_w = 640;
 const int win_h = 480;
+constexpr float dt = 0.001f;
 
+void update(World & w, float dt)
+{
+}
+void draw(SDLRenderer& r, World& w)
+{
+	for(auto & obj : w.movable) {
+		SDL_RenderCopy(r.ptr(), obj.img,
+			0, 0);
+	}
+}
 int main(int argc, char** args){
 	SDLState sdl;
 	SDLVideoSystem video;
@@ -22,15 +33,33 @@ int main(int argc, char** args){
 		0   // 0 means no flags
 		);
 
+	World world;
 
 	bool running = true;
+	SDLTimer timer;
 	while(running){
+		unsigned t = timer.lap();
 		SDL_Event e;
 		while(SDL_PollEvent(&e)) {
 			if(e.type == SDL_QUIT)
 				running = false;
+			else if(e.type == SDL_KEYDOWN) {
+				std::cout << "t=" << t << std::endl;
+				//std::cout << "goal="<< goal << std::endl;
+			}
 		}
 
+		if(t == 0) {
+			t = 1;
+		} else if(t > 30) {
+			t = 30;
+		}
+		while(t != 0) {
+			t--;
+			update(world, dt);
+		}
+
+		draw(renderer, world);
 	}
 	return 0;
 }

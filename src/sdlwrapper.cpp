@@ -156,7 +156,7 @@ void SDLRenderer::unload(char const* name)
 }
 
 SDLTimer::SDLTimer()
-:begin(0), end(0)
+:begin(SDL_GetTicks()), end(0)
 {
 }
 
