@@ -7,6 +7,7 @@
 #include <string>
 #include <exception>
 #include <memory>
+#include <vector>
 
 class Exception : public std::exception {
 	std::string message;
@@ -35,6 +36,20 @@ std::string get_shader_log(GLuint id)
 	return logStr;
 }
 
+std::string get_program_log(GLuint id)
+{
+	GLint logMaxLength;
+	glGetProgramiv(id, GL_INFO_LOG_LENGTH, &logMaxLength);
+	std::unique_ptr<GLchar[]> logBuf(new GLchar[logMaxLength]);
+
+	GLsizei logLength;
+	glGetProgramInfoLog(id, logMaxLength, &logLength, logBuf.get());
+
+	std::string logStr(logBuf.get());
+
+	return logStr;
+}
+
 void init_shader(GLuint & id, GLenum shaderType, GLchar const* source)
 {
 	id = glCreateShader(shaderType);
@@ -57,9 +72,7 @@ void init_shader(GLuint & id, GLenum shaderType, GLchar const* source)
 
 	if(compiled != GL_TRUE) {
 		std::string logStr = get_shader_log(id);
-		if(logStr.length() != 0) {
-			throw Exception(logStr.c_str());
-		}
+		throw Exception(logStr.c_str());
 	}
 }
 
@@ -72,6 +85,28 @@ void init_fragment_shader(GLuint & id, GLchar const * source)
 	init_shader(id, GL_FRAGMENT_SHADER, source);
 }
 
+void init_program(GLuint & id, const std::vector<GLuint> & shaders)
+{
+	GLuint shaderProgramId;
+	shaderProgramId = glCreateProgram();
+	if(shaderProgramId == 0) {
+		throw Exception("init program: failed to create shader program");
+	}
+
+	for(GLuint shaderId : shaders) {
+		glAttachShader(shaderProgramId, shaderId);
+	}
+
+	glLinkProgram(shaderProgramId);
+
+	GLint linked;
+	glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &linked);
+	if(linked != GL_TRUE) {
+		std::string logStr = get_program_log(shaderProgramId);
+		throw Exception(logStr.c_str());
+	}
+
+}
 int init_SDL_GL()
 {
 	//Use OpenGL 3.3 core
@@ -169,20 +204,10 @@ int main(int argc, char** args)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// shader program
-	GLuint shaderProgram;
-	shaderProgramId = glCreateProgram();
-	if(shaderProgramId == 0) {
-		throw Exception("failed to create shader program");
-	}
-	glAttachShader(shaderProgramId, vertexShaderId);
-	glAttachShader(shaderProgramId, fragmentShaderId);
-	glLinkProgram(shaderProgramId);
+	std::vector<GLuint> shaders = {vertexShaderId, fragmentShaderId};
 
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if(!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		...
-	}
+	GLuint programId;
+	init_program(programId, shaders);
 
 	bool running = true;
 	while(running){
