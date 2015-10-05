@@ -9,67 +9,67 @@
 #include <memory>
 
 class Exception : public std::exception {
-  std::string message;
+	std::string message;
 public:
-  Exception(char const* msg)
-    : message(msg)
-  {
-  }
-  virtual char const* what() noexcept
-  {
-    return message.c_str();
-  }
+	Exception(char const* msg)
+	: message(msg)
+	{
+	}
+	virtual char const* what() noexcept
+	{
+		return message.c_str();
+	}
 };
 
 std::string get_shader_log(GLuint id)
 {
-  GLint logMaxLength;
-  glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logMaxLength);
-  std::unique_ptr<GLchar[]> logBuf(new GLchar[logMaxLength]);
+	GLint logMaxLength;
+	glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logMaxLength);
+	std::unique_ptr<GLchar[]> logBuf(new GLchar[logMaxLength]);
 
-  GLsizei logLength;
-  glGetShaderInfoLog(id, logMaxLength, &logLength, logBuf.get());
+	GLsizei logLength;
+	glGetShaderInfoLog(id, logMaxLength, &logLength, logBuf.get());
 
-  std::string logStr(logBuf.get());
+	std::string logStr(logBuf.get());
 
-  return logStr;
+	return logStr;
 }
 
 void init_shader(GLuint & id, GLenum shaderType, GLchar const* source)
 {
-  id = glCreateShader(shaderType);
-  if(id == 0) {
-    throw Exception("init shader: failed to create shader");
-  }
+	id = glCreateShader(shaderType);
+	if(id == 0) {
+		throw Exception("init shader: failed to create shader");
+	}
 
-  glShaderSource(id, 1, &source, NULL);
-  if(glGetError()) {
-    throw Exception("init shader: unexpected error");
-  }
+	glShaderSource(id, 1, &source, NULL);
+	if(glGetError()) {
+		throw Exception("init shader: unexpected error");
+	}
 
-  glCompileShader(id);
-  if(glGetError()) {
-    throw Exception("init shader: unexpected error");
-  }
+	glCompileShader(id);
+	if(glGetError()) {
+		throw Exception("init shader: unexpected error");
+	}
 
-  GLint compiled;
-  glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
+	GLint compiled;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
 
-  if(compiled != GL_TRUE) {
-    std::string logStr = get_shader_log(id);
-    if(logStr.length() != 0) {
-      throw Exception(logStr.c_str());
-    }
-  }
+	if(compiled != GL_TRUE) {
+		std::string logStr = get_shader_log(id);
+		if(logStr.length() != 0) {
+			throw Exception(logStr.c_str());
+		}
+	}
 }
 
 void init_vertex_shader(GLuint & id, GLchar const * source)
 {
-  init_shader(id, GL_VERTEX_SHADER, source);
+	init_shader(id, GL_VERTEX_SHADER, source);
 }
 void init_fragment_shader(GLuint & id, GLchar const * source)
 {
-  init_shader(id, GL_FRAGMENT_SHADER, source);
+	init_shader(id, GL_FRAGMENT_SHADER, source);
 }
 
 int init_SDL_GL()
@@ -91,8 +91,8 @@ int init_SDL_GL()
 
 int main(int argc, char** args)
 {
-  unsigned win_w = 640;
-  unsigned win_h = 640;
+	unsigned win_w = 640;
+	unsigned win_h = 640;
 	sdl2::SDL sdl;
 	sdl2::VideoSystem sdlVideo;
 	sdl2::EventSystem sdlEvents;
@@ -108,7 +108,8 @@ int main(int argc, char** args)
 	sdl2::Window window(
 		"game",
 		win_w, win_h,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
+	);
 
 	//Create context
 	sdl2::GLContext glContext(window);
@@ -132,47 +133,62 @@ int main(int argc, char** args)
 	// clear colour
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-  // vertex shader
-  GLuint vertexShaderId;
-  GLchar const * vertexShaderSource =
-    "#version 330 core"
-    "layout (location = 0) in vec3 position;"
-    "void main()"
-    "{"
-    "    gl_Position = vec4(position.x, position.y, position.z, 1.0);"
-    "}"
-  ;
-  init_vertex_shader(vertexShaderId, vertexShaderSource);
+	// vertex shader
+	GLuint vertexShaderId;
+	GLchar const * vertexShaderSource =
+	"#version 330 core"
+	"layout (location = 0) in vec3 position;"
+	"void main()"
+	"{"
+	"    gl_Position = vec4(position.x, position.y, position.z, 1.0);"
+	"}"
+	;
+	init_vertex_shader(vertexShaderId, vertexShaderSource);
 
-  // fragment shader
-  GLuint fragmentShaderId;
-  GLchar const* fragmentShaderSource =
-    "#version 330 core"
-    "out vec4 color;"
-    "void main()"
-    "{"
-    "    color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
-    "}"
-  ;
-  init_fragment_shader(fragmentShaderId, fragmentShaderSource);
+	// fragment shader
+	GLuint fragmentShaderId;
+	GLchar const* fragmentShaderSource =
+	"#version 330 core"
+	"out vec4 color;"
+	"void main()"
+	"{"
+	"    color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
+	"}"
+	;
+	init_fragment_shader(fragmentShaderId, fragmentShaderSource);
 
-  // vertex data
-  GLfloat vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
-  };
-  GLuint VBO;
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	// vertex data
+	GLfloat vertices[] = {
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		0.0f,  0.5f, 0.0f
+	};
+	GLuint VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+	// shader program
+	GLuint shaderProgram;
+	shaderProgramId = glCreateProgram();
+	if(shaderProgramId == 0) {
+		throw Exception("failed to create shader program");
+	}
+	glAttachShader(shaderProgramId, vertexShaderId);
+	glAttachShader(shaderProgramId, fragmentShaderId);
+	glLinkProgram(shaderProgramId);
+
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if(!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		...
+	}
 
 	bool running = true;
 	while(running){
 		for(SDL_Event e : sdlEvents) {
 			if(e.type == SDL_QUIT)
-				running = false;
+			running = false;
 		}
 
 		// render
