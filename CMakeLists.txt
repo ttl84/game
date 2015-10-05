@@ -8,7 +8,7 @@ include_directories(./include)
 file(GLOB SOURCES "src/*.cpp")
 
 # set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors -Wall -static-libstdc++")
 
 # set libraries to link
 set(LIBS SDL2 SDL2_image)
