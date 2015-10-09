@@ -4,20 +4,22 @@
 #define SDLWRAPPER_H
 #include "SDL2/SDL.h"
 #include <string>
+#include <exception>
 namespace sdl2{
-	class Exception {
+	class Exception : public std::exception{
 		std::string msg;
-		
+
 	public:
-		Exception(std::string const & s) :msg(s){}
-		
+		explicit Exception(char const * s) : msg(s){}
+		explicit Exception(std::string const & s) :msg(s){}
+
 		virtual char const * what() noexcept
 		{
 			return msg.c_str();
 		}
 	};
-	
-	
+
+
 	class SDL{
 		bool good;
 	public:
@@ -43,7 +45,7 @@ namespace sdl2{
 			return good;
 		}
 	};
-	
+
 	class VideoSystem {
 		bool good;
 	public:
@@ -57,20 +59,20 @@ namespace sdl2{
 				good = true;
 			}
 		}
-		
+
 		~VideoSystem()
 		{
 			if(good) {
 				SDL_QuitSubSystem(SDL_INIT_VIDEO);
 			}
 		}
-		
+
 		bool isInitialized() const
 		{
 			return good;
 		}
 	};
-	
+
 	class Window {
 		SDL_Window * window;
 	public:
@@ -95,7 +97,7 @@ namespace sdl2{
 			return window;
 		}
 	};
-	
+
 	class GLContext {
 		SDL_GLContext context;
 	public:
@@ -106,20 +108,20 @@ namespace sdl2{
 				throw Exception(std::string("failed to create opengl context: ") + SDL_GetError());
 			}
 		}
-		
+
 		~GLContext()
 		{
 			if(context != NULL) {
 				SDL_GL_DeleteContext(context);
 			}
 		}
-		
+
 		SDL_GLContext get()
 		{
 			return context;
 		}
 	};
-	
+
 	class EventIterator {
 		bool isEnd;
 		SDL_Event event;
@@ -161,7 +163,7 @@ namespace sdl2{
 		{
 			SDL_QuitSubSystem(SDL_INIT_EVENTS);
 		}
-		
+
 		EventIterator begin()
 		{
 			EventIterator iter(false);

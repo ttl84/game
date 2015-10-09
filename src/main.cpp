@@ -9,19 +9,6 @@
 #include <memory>
 #include <vector>
 
-class Exception : public std::exception {
-	std::string message;
-public:
-	Exception(char const* msg)
-	: message(msg)
-	{
-	}
-	virtual char const* what() noexcept
-	{
-		return message.c_str();
-	}
-};
-
 std::string get_shader_log(GLuint id)
 {
 	GLint logMaxLength;
@@ -50,62 +37,53 @@ std::string get_program_log(GLuint id)
 	return logStr;
 }
 
-void init_shader(GLuint & id, GLenum shaderType, GLchar const* source)
+void shaderFromString(GLuint & id, GLenum shaderType, GLchar const* source)
 {
 	id = glCreateShader(shaderType);
 	if(id == 0) {
-		throw Exception("init shader: failed to create shader");
+		throw sdl2::Exception("init shader: failed to create shader");
 	}
 
 	glShaderSource(id, 1, &source, NULL);
-	if(glGetError()) {
-		throw Exception("init shader: unexpected error");
-	}
-
 	glCompileShader(id);
-	if(glGetError()) {
-		throw Exception("init shader: unexpected error");
-	}
 
 	GLint compiled;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
 
 	if(compiled != GL_TRUE) {
 		std::string logStr = get_shader_log(id);
-		throw Exception(logStr.c_str());
+		throw sdl2::Exception(logStr.c_str());
 	}
 }
 
-void init_vertex_shader(GLuint & id, GLchar const * source)
+void vertexShaderFromString(GLuint & id, GLchar const * source)
 {
-	init_shader(id, GL_VERTEX_SHADER, source);
+	shaderFromString(id, GL_VERTEX_SHADER, source);
 }
-void init_fragment_shader(GLuint & id, GLchar const * source)
+void fragmentShaderFromString(GLuint & id, GLchar const * source)
 {
-	init_shader(id, GL_FRAGMENT_SHADER, source);
+	shaderFromString(id, GL_FRAGMENT_SHADER, source);
 }
 
-void init_program(GLuint & id, const std::vector<GLuint> & shaders)
+void init_program(GLuint & programID, const std::vector<GLuint> & shaders)
 {
-	GLuint shaderProgramId;
-	shaderProgramId = glCreateProgram();
-	if(shaderProgramId == 0) {
-		throw Exception("init program: failed to create shader program");
+	programID = glCreateProgram();
+	if(programID == 0) {
+		throw sdl2::Exception("init program: failed to create shader program");
 	}
 
 	for(GLuint shaderId : shaders) {
-		glAttachShader(shaderProgramId, shaderId);
+		glAttachShader(programID, shaderId);
 	}
 
-	glLinkProgram(shaderProgramId);
+	glLinkProgram(programID);
 
 	GLint linked;
-	glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &linked);
+	glGetProgramiv(programID, GL_LINK_STATUS, &linked);
 	if(linked != GL_TRUE) {
-		std::string logStr = get_program_log(shaderProgramId);
-		throw Exception(logStr.c_str());
+		std::string logStr = get_program_log(programID);
+		throw sdl2::Exception(logStr.c_str());
 	}
-
 }
 int init_SDL_GL()
 {
@@ -123,8 +101,7 @@ int init_SDL_GL()
 
 	return 0;
 }
-
-int main(int argc, char** args)
+int run()
 {
 	unsigned win_w = 640;
 	unsigned win_h = 640;
@@ -165,49 +142,76 @@ int main(int argc, char** args)
 	// camera
 	glViewport(0, 0, win_w, win_h);
 
-	// clear colour
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-	// vertex shader
+
+
+	// shader program
 	GLuint vertexShaderId;
 	GLchar const * vertexShaderSource =
-	"#version 330 core"
-	"layout (location = 0) in vec3 position;"
+	"#version 330 core\n"
+	"layout(location = 0) in vec3 inPosition;"
+	//"out vec4 outPosition;"
 	"void main()"
 	"{"
-	"    gl_Position = vec4(position.x, position.y, position.z, 1.0);"
+	"	gl_Position.xyz = inPosition;"
+	"	gl_Position.w = 1.0;"
 	"}"
 	;
-	init_vertex_shader(vertexShaderId, vertexShaderSource);
+	vertexShaderFromString(vertexShaderId, vertexShaderSource);
 
-	// fragment shader
 	GLuint fragmentShaderId;
 	GLchar const* fragmentShaderSource =
-	"#version 330 core"
-	"out vec4 color;"
+	"#version 330 core\n"
+	"layout(location = 0) out vec4 color;"
 	"void main()"
 	"{"
-	"    color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
+	"	color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
 	"}"
 	;
-	init_fragment_shader(fragmentShaderId, fragmentShaderSource);
+	fragmentShaderFromString(fragmentShaderId, fragmentShaderSource);
+
+	std::vector<GLuint> shaders = {vertexShaderId, fragmentShaderId};
+	GLuint programID;
+	init_program(programID, shaders);
+
+	glDeleteShader(vertexShaderId);
+	glDeleteShader(fragmentShaderId);
 
 	// vertex data
 	GLfloat vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f,  0.5f, 0.0f
+		0.5f,  0.5f, 0.0f,  // Top Right
+		0.5f, -0.5f, 0.0f,  // Bottom Right
+		-0.5f, -0.5f, 0.0f,  // Bottom Left
+		-0.5f,  0.5f, 0.0f   // Top Left
 	};
+	GLuint indices[] = {  // Note that we start from 0!
+		0, 1, 3,   // First Triangle
+		1, 2, 3    // Second Triangle
+	};
+
+	GLuint EBO;
+	glGenBuffers(1, &EBO);
+
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	// shader program
-	std::vector<GLuint> shaders = {vertexShaderId, fragmentShaderId};
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
 
-	GLuint programId;
-	init_program(programId, shaders);
+	glBindVertexArray(VAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), NULL);
+		glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	bool running = true;
 	while(running){
@@ -217,11 +221,24 @@ int main(int argc, char** args)
 		}
 
 		// render
+
 		glClear(GL_COLOR_BUFFER_BIT);
+		glUseProgram(programID);
+		glBindVertexArray(VAO);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		//Update screen
 		SDL_GL_SwapWindow( window.get() );
 	}
-
+	return 0;
+}
+int main(int argc, char** args)
+{
+	try {
+		run();
+	} catch(sdl2::Exception & e) {
+		std::cout << e.what() << '\n';
+	}
 	return 0;
 }
