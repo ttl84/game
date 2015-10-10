@@ -18,7 +18,7 @@ public:
 		return msg.c_str();
 	}
 };
-}
+
 // Get the log of a shader program
 std::string getProgramLog(GLuint id);
 
@@ -37,4 +37,6 @@ void fragmentShaderFromFile(GLuint & id, char const * path);
 // Program id will be assigned to id after function is finished.
 // If the program doesn't link, an exception will be thrown.
 void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders);
+
+} // end namespace gl
 #endif

@@ -2,6 +2,8 @@
 #include "file_util.hpp"
 #include <memory>
 
+namespace gl{
+
 std::string getProgramLog(GLuint id)
 {
 	GLint logMaxLength;
@@ -38,7 +40,7 @@ void shaderFromString(GLuint & id, GLenum shaderType, GLchar const* source)
 {
 	id = glCreateShader(shaderType);
 	if(id == 0) {
-		throw gl::Exception("init shader: failed to create shader");
+		throw Exception("init shader: failed to create shader");
 	}
 
 	glShaderSource(id, 1, &source, NULL);
@@ -49,7 +51,7 @@ void shaderFromString(GLuint & id, GLenum shaderType, GLchar const* source)
 
 	if(compiled != GL_TRUE) {
 		std::string logStr = getShaderLog(id);
-		throw gl::Exception(logStr.c_str());
+		throw Exception(logStr.c_str());
 	}
 }
 
@@ -71,7 +73,7 @@ void vertexShaderFromFile(GLuint & id, char const * path)
 		std::string msg("failed to open vertex shader file: ");
 		msg += path;
 
-		throw gl::Exception(msg);
+		throw Exception(msg);
 	}
 }
 void fragmentShaderFromFile(GLuint & id, char const * path)
@@ -83,7 +85,7 @@ void fragmentShaderFromFile(GLuint & id, char const * path)
 		std::string msg("failed to open fragment shader file: ");
 		msg += path;
 
-		throw gl::Exception(msg);
+		throw Exception(msg);
 	}
 }
 
@@ -91,7 +93,7 @@ void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders)
 {
 	programID = glCreateProgram();
 	if(programID == 0) {
-		throw gl::Exception("init program: failed to create shader program");
+		throw Exception("init program: failed to create shader program");
 	}
 
 	for(GLuint shaderId : shaders) {
@@ -104,6 +106,8 @@ void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders)
 	glGetProgramiv(programID, GL_LINK_STATUS, &linked);
 	if(linked != GL_TRUE) {
 		std::string logStr = getProgramLog(programID);
-		throw gl::Exception(logStr.c_str());
+		throw Exception(logStr.c_str());
 	}
 }
+
+} // end namespace gl

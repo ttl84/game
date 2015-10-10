@@ -71,14 +71,14 @@ int run()
 
 	// shader program
 	GLuint vertexShaderId;
-	vertexShaderFromFile(vertexShaderId, "../shaders/vertex.glsl");
+	gl::vertexShaderFromFile(vertexShaderId, "../shaders/vertex.glsl");
 
 	GLuint fragmentShaderId;
-	fragmentShaderFromFile(fragmentShaderId, "../shaders/fragment.glsl");
+	gl::fragmentShaderFromFile(fragmentShaderId, "../shaders/fragment.glsl");
 
 	std::vector<GLuint> shaders = {vertexShaderId, fragmentShaderId};
 	GLuint programID;
-	programFromShaders(programID, shaders);
+	gl::programFromShaders(programID, shaders);
 
 	glDeleteShader(vertexShaderId);
 	glDeleteShader(fragmentShaderId);
