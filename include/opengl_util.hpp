@@ -30,6 +30,8 @@ std::string getShaderLog(GLuint id);
 // If the shader source doesn't compile, an exception will be thrown.
 void vertexShaderFromString(GLuint & id, GLchar const * source);
 void fragmentShaderFromString(GLuint & id, GLchar const * source);
+void vertexShaderFromFile(GLuint & id, char const * path);
+void fragmentShaderFromFile(GLuint & id, char const * path);
 
 // Create shader program.
 // Program id will be assigned to id after function is finished.

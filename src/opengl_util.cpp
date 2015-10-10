@@ -1,4 +1,5 @@
 #include "opengl_util.hpp"
+#include "file_util.hpp"
 #include <memory>
 
 std::string getProgramLog(GLuint id)
@@ -59,6 +60,31 @@ void vertexShaderFromString(GLuint & id, GLchar const * source)
 void fragmentShaderFromString(GLuint & id, GLchar const * source)
 {
 	shaderFromString(id, GL_FRAGMENT_SHADER, source);
+}
+
+void vertexShaderFromFile(GLuint & id, char const * path)
+{
+	std::string file;
+	if(stringFromFile(file, path)) {
+		vertexShaderFromString(id, file.c_str());
+	} else {
+		std::string msg("failed to open vertex shader file: ");
+		msg += path;
+
+		throw gl::Exception(msg);
+	}
+}
+void fragmentShaderFromFile(GLuint & id, char const * path)
+{
+	std::string file;
+	if(stringFromFile(file, path)) {
+		fragmentShaderFromString(id, file.c_str());
+	} else {
+		std::string msg("failed to open fragment shader file: ");
+		msg += path;
+
+		throw gl::Exception(msg);
+	}
 }
 
 void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders)

@@ -71,29 +71,10 @@ int run()
 
 	// shader program
 	GLuint vertexShaderId;
-	GLchar const * vertexShaderSource =
-	"#version 330 core\n"
-	"layout(location = 0) in vec3 inPosition;"
-	//"out vec4 outPosition;"
-	"void main()"
-	"{"
-	"	gl_Position.xyz = inPosition;"
-	"	gl_Position.w = 1.0;"
-	"}"
-	;
-	vertexShaderFromString(vertexShaderId, vertexShaderSource);
+	vertexShaderFromFile(vertexShaderId, "../shaders/vertex.glsl");
 
 	GLuint fragmentShaderId;
-	GLchar const* fragmentShaderSource =
-	"#version 330 core\n"
-	"out vec4 color;"
-	"uniform vec4 ourColor;"
-	"void main()"
-	"{"
-	"	color = ourColor;"
-	"}"
-	;
-	fragmentShaderFromString(fragmentShaderId, fragmentShaderSource);
+	fragmentShaderFromFile(fragmentShaderId, "../shaders/fragment.glsl");
 
 	std::vector<GLuint> shaders = {vertexShaderId, fragmentShaderId};
 	GLuint programID;
