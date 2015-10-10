@@ -97,7 +97,7 @@ int run()
 
 	std::vector<GLuint> shaders = {vertexShaderId, fragmentShaderId};
 	GLuint programID;
-	init_program(programID, shaders);
+	programFromShaders(programID, shaders);
 
 	glDeleteShader(vertexShaderId);
 	glDeleteShader(fragmentShaderId);

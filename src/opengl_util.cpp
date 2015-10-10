@@ -57,7 +57,7 @@ void fragmentShaderFromString(GLuint & id, GLchar const * source)
 	shaderFromString(id, GL_FRAGMENT_SHADER, source);
 }
 
-void init_program(GLuint & programID, const std::vector<GLuint> & shaders)
+void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders)
 {
 	programID = glCreateProgram();
 	if(programID == 0) {

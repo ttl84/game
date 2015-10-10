@@ -25,9 +25,14 @@ std::string get_program_log(GLuint id);
 // Get the log of a shader
 std::string get_shader_log(GLuint id);
 
-// create shader objects
+// Create shader objects.
+// Shader id will be assigned to id after function is finished.
+// If the shader source doesn't compile, an exception will be thrown.
 void vertexShaderFromString(GLuint & id, GLchar const * source);
 void fragmentShaderFromString(GLuint & id, GLchar const * source);
 
-void init_program(GLuint & programID, const std::vector<GLuint> & shaders);
+// Create shader program.
+// Program id will be assigned to id after function is finished.
+// If the program doesn't link, an exception will be thrown.
+void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders);
 #endif
