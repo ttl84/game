@@ -20,10 +20,10 @@ public:
 };
 }
 // Get the log of a shader program
-std::string get_program_log(GLuint id);
+std::string getProgramLog(GLuint id);
 
 // Get the log of a shader
-std::string get_shader_log(GLuint id);
+std::string getShaderLog(GLuint id);
 
 // Create shader objects.
 // Shader id will be assigned to id after function is finished.

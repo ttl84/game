@@ -1,7 +1,7 @@
 #include "opengl_util.hpp"
 #include <memory>
 
-std::string get_program_log(GLuint id)
+std::string getProgramLog(GLuint id)
 {
 	GLint logMaxLength;
 	glGetProgramiv(id, GL_INFO_LOG_LENGTH, &logMaxLength);
@@ -10,12 +10,14 @@ std::string get_program_log(GLuint id)
 	GLsizei logLength;
 	glGetProgramInfoLog(id, logMaxLength, &logLength, logBuf.get());
 
-	std::string logStr(logBuf.get());
-
-	return logStr;
+	if(logLength != 0) {
+		return std::string(logBuf.get());
+	} else {
+		return std::string();
+	}
 }
 
-std::string get_shader_log(GLuint id)
+std::string getShaderLog(GLuint id)
 {
 	GLint logMaxLength;
 	glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logMaxLength);
@@ -24,9 +26,11 @@ std::string get_shader_log(GLuint id)
 	GLsizei logLength;
 	glGetShaderInfoLog(id, logMaxLength, &logLength, logBuf.get());
 
-	std::string logStr(logBuf.get());
-
-	return logStr;
+	if(logLength != 0) {
+		return std::string(logBuf.get());
+	} else {
+		return std::string();
+	}
 }
 
 void shaderFromString(GLuint & id, GLenum shaderType, GLchar const* source)
@@ -43,7 +47,7 @@ void shaderFromString(GLuint & id, GLenum shaderType, GLchar const* source)
 	glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
 
 	if(compiled != GL_TRUE) {
-		std::string logStr = get_shader_log(id);
+		std::string logStr = getShaderLog(id);
 		throw gl::Exception(logStr.c_str());
 	}
 }
@@ -73,7 +77,7 @@ void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders)
 	GLint linked;
 	glGetProgramiv(programID, GL_LINK_STATUS, &linked);
 	if(linked != GL_TRUE) {
-		std::string logStr = get_program_log(programID);
+		std::string logStr = getProgramLog(programID);
 		throw gl::Exception(logStr.c_str());
 	}
 }
