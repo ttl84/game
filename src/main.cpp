@@ -8,6 +8,7 @@
 #include <exception>
 #include <memory>
 #include <vector>
+#include <cmath>
 
 std::string get_shader_log(GLuint id)
 {
@@ -162,10 +163,11 @@ int run()
 	GLuint fragmentShaderId;
 	GLchar const* fragmentShaderSource =
 	"#version 330 core\n"
-	"layout(location = 0) out vec4 color;"
+	"out vec4 color;"
+	"uniform vec4 ourColor;"
 	"void main()"
 	"{"
-	"	color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
+	"	color = ourColor;"
 	"}"
 	;
 	fragmentShaderFromString(fragmentShaderId, fragmentShaderSource);
@@ -220,10 +222,19 @@ int run()
 			running = false;
 		}
 
+		{
+			GLfloat timeValue = SDL_GetTicks();
+			GLfloat greenValue = (std::sin(timeValue * 0.001) + 1) / 2;
+			GLfloat redValue = (std::sin(timeValue * 0.0011) + 1) / 2;
+			GLfloat blueValue = (std::sin(timeValue * 0.0012) + 1) / 2;
+			GLint vertexColorLocation = glGetUniformLocation(programID, "ourColor");
+			glUseProgram(programID);
+			glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
+		}
 		// render
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glUseProgram(programID);
+
 		glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
