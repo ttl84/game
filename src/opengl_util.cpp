@@ -59,7 +59,15 @@ void shaderFromFile(GLuint & id, GLenum shaderType, char const * path)
 {
 	std::string file;
 	if(stringFromFile(file, path)) {
-		shaderFromString(id, shaderType, file.c_str());
+		try{
+			shaderFromString(id, shaderType, file.c_str());
+		} catch(const Exception & e) {
+			std::string msg("in ");
+			msg += path;
+			msg += ": \n";
+			msg += e.what();
+			throw Exception(msg);
+		}
 	} else {
 		std::string msg("failed to open shader file: ");
 		msg += path;

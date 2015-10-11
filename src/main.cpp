@@ -78,11 +78,12 @@ int run()
 
 	// vertex data
 	GLfloat vertices[] = {
-		0.5f,  0.5f, 0.0f,  // Top Right
-		0.5f, -0.5f, 0.0f,  // Bottom Right
-		-0.5f, -0.5f, 0.0f,  // Bottom Left
-		-0.5f,  0.5f, 0.0f   // Top Left
+		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f
 	};
+
 	GLuint indices[] = {  // Note that we start from 0!
 		0, 1, 3,   // First Triangle
 		1, 2, 3    // Second Triangle
@@ -102,11 +103,15 @@ int run()
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), NULL);
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), NULL);
-		glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -121,12 +126,12 @@ int run()
 
 		{
 			GLfloat timeValue = SDL_GetTicks();
-			GLfloat greenValue = (std::sin(timeValue * 0.001) + 1) / 2;
-			GLfloat redValue = (std::sin(timeValue * 0.0011) + 1) / 2;
-			GLfloat blueValue = (std::sin(timeValue * 0.0012) + 1) / 2;
-			GLint vertexColorLocation = glGetUniformLocation(programID, "ourColor");
+			GLfloat greenValue = (std::sin(timeValue * 0.001)) / 2;
+			GLfloat redValue = (std::sin(timeValue * 0.0011)) / 2;
+			GLfloat blueValue = (std::sin(timeValue * 0.0012)) / 2;
+			GLint vertexColorLocation = glGetUniformLocation(programID, "ourColour");
 			glUseProgram(programID);
-			glUniform4f(vertexColorLocation, redValue, greenValue, blueValue, 1.0f);
+			glUniform3f(vertexColorLocation, redValue, greenValue, blueValue);
 		}
 		// render
 
