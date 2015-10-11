@@ -70,18 +70,11 @@ int run()
 
 
 	// shader program
-	GLuint vertexShaderId;
-	gl::vertexShaderFromFile(vertexShaderId, "../shaders/vertex.glsl");
-
-	GLuint fragmentShaderId;
-	gl::fragmentShaderFromFile(fragmentShaderId, "../shaders/fragment.glsl");
-
-	std::vector<GLuint> shaders = {vertexShaderId, fragmentShaderId};
 	GLuint programID;
-	gl::programFromShaders(programID, shaders);
-
-	glDeleteShader(vertexShaderId);
-	glDeleteShader(fragmentShaderId);
+	gl::programFromShaderFiles(programID, {
+		{GL_VERTEX_SHADER, "../shaders/vertex.glsl"},
+		{GL_FRAGMENT_SHADER, "../shaders/fragment.glsl"}
+	});
 
 	// vertex data
 	GLfloat vertices[] = {

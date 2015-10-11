@@ -1,7 +1,7 @@
 #include "opengl_util.hpp"
 #include "file_util.hpp"
 #include <memory>
-
+#include <utility>
 namespace gl{
 
 std::string getProgramLog(GLuint id)
@@ -55,34 +55,13 @@ void shaderFromString(GLuint & id, GLenum shaderType, GLchar const* source)
 	}
 }
 
-void vertexShaderFromString(GLuint & id, GLchar const * source)
-{
-	shaderFromString(id, GL_VERTEX_SHADER, source);
-}
-void fragmentShaderFromString(GLuint & id, GLchar const * source)
-{
-	shaderFromString(id, GL_FRAGMENT_SHADER, source);
-}
-
-void vertexShaderFromFile(GLuint & id, char const * path)
+void shaderFromFile(GLuint & id, GLenum shaderType, char const * path)
 {
 	std::string file;
 	if(stringFromFile(file, path)) {
-		vertexShaderFromString(id, file.c_str());
+		shaderFromString(id, shaderType, file.c_str());
 	} else {
-		std::string msg("failed to open vertex shader file: ");
-		msg += path;
-
-		throw Exception(msg);
-	}
-}
-void fragmentShaderFromFile(GLuint & id, char const * path)
-{
-	std::string file;
-	if(stringFromFile(file, path)) {
-		fragmentShaderFromString(id, file.c_str());
-	} else {
-		std::string msg("failed to open fragment shader file: ");
+		std::string msg("failed to open shader file: ");
 		msg += path;
 
 		throw Exception(msg);
@@ -110,4 +89,72 @@ void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders)
 	}
 }
 
+
+// Shader helper class
+class Shader{
+	GLuint id;
+public:
+	Shader()
+	{
+		id = 0;
+	}
+	Shader(const Shader&) = delete;
+	Shader& operator=(const Shader&) = delete;
+
+	Shader(Shader && s)
+	{
+		*this = std::move(s);
+	}
+	Shader& operator=(Shader&& s)
+	{
+		if(id != 0) {
+			glDeleteShader(id);
+		}
+		id = s.id;
+		s.id = 0;
+
+		return *this;
+	}
+	static Shader fromString(GLenum shaderType, GLchar const * source)
+	{
+		Shader s;
+		shaderFromString(s.id, shaderType, source);
+		return std::move(s);
+	}
+	static Shader fromFile(GLenum shaderType, char const * path)
+	{
+		Shader s;
+		shaderFromFile(s.id, shaderType, path);
+		return std::move(s);
+	}
+	~Shader()
+	{
+		if(id != 0) {
+			glDeleteShader(id);
+		}
+	}
+
+	GLuint getID() const
+	{
+		return id;
+	}
+};
+
+void programFromShaderFiles(GLuint& programID,
+	const std::vector<std::pair<GLenum, char const*>> sources)
+{
+	std::vector<Shader> shaders;
+	for(auto p : sources) {
+		GLenum shaderType = p.first;
+		char const * path = p.second;
+		shaders.push_back(Shader::fromFile(shaderType, path));
+	}
+
+	std::vector<GLuint> shaderIds;
+	for(Shader & s : shaders) {
+		shaderIds.push_back(s.getID());
+	}
+
+	programFromShaders(programID, shaderIds);
+}
 } // end namespace gl

@@ -28,15 +28,15 @@ std::string getShaderLog(GLuint id);
 // Create shader objects.
 // Shader id will be assigned to id after function is finished.
 // If the shader source doesn't compile, an exception will be thrown.
-void vertexShaderFromString(GLuint & id, GLchar const * source);
-void fragmentShaderFromString(GLuint & id, GLchar const * source);
-void vertexShaderFromFile(GLuint & id, char const * path);
-void fragmentShaderFromFile(GLuint & id, char const * path);
+void shaderFromString(GLuint & id, GLenum shaderType, GLchar const* source);
+void shaderFromFile(GLuint & id, GLenum shaderType, char const* source);
 
 // Create shader program.
 // Program id will be assigned to id after function is finished.
 // If the program doesn't link, an exception will be thrown.
 void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders);
+void programFromShaderFiles(GLuint& programID,
+	const std::vector<std::pair<GLenum, char const*>> sources);
 
 } // end namespace gl
 #endif
