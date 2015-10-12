@@ -3,6 +3,7 @@
 #ifndef SDLWRAPPER_H
 #define SDLWRAPPER_H
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 #include <string>
 #include <exception>
 namespace sdl2{
@@ -70,6 +71,80 @@ namespace sdl2{
 		bool isInitialized() const
 		{
 			return good;
+		}
+	};
+
+	class ImageLoader {
+		int initFlags;
+		int resultFlags;
+		void prepInitFlag(int flag, bool yes)
+		{
+			if(yes) {
+				initFlags |= flag;
+			} else {
+				initFlags &= ~flag;
+			}
+		}
+	public:
+		ImageLoader()
+		{
+			initFlags = 0;
+			resultFlags = 0;
+		}
+
+		~ImageLoader()
+		{
+			quit();
+		}
+
+		// These functions prepare initialization data.
+		// Once preparation is complete, use init() to initialize.
+		void prepInitPNG(bool yes)
+		{
+			prepInitFlag(IMG_INIT_PNG, yes);
+		}
+		void prepInitJPG(bool yes)
+		{
+			prepInitFlag(IMG_INIT_JPG, yes);
+		}
+		void prepInitTIF(bool yes)
+		{
+			prepInitFlag(IMG_INIT_TIF, yes);
+		}
+
+		// These functions test the initialization status.
+		bool isInitJPG() const
+		{
+			return resultFlags & IMG_INIT_JPG;
+		}
+		bool isInitPNG() const
+		{
+			return resultFlags & IMG_INIT_PNG;
+		}
+		bool isInitTIF() const
+		{
+			return resultFlags & IMG_INIT_TIF;
+		}
+
+		// This function initializes modules based on initialization data.
+		// After this call, initialization data is reset.
+		// Returns true if desired initialization matches results.
+		bool init()
+		{
+			int arg = initFlags;
+			quit();
+			int resultFlags = IMG_Init(arg);
+			return resultFlags == arg;
+		}
+
+		// Quits any initialized modules and resets initialization data.
+		void quit()
+		{
+			initFlags = 0;
+			if(resultFlags != 0) {
+				IMG_Quit();
+				resultFlags = 0;
+			}
 		}
 	};
 
@@ -174,6 +249,7 @@ namespace sdl2{
 			return EventIterator(true);
 		}
 	};
+
 } // end namespace sdl2
 
 #endif
