@@ -30,15 +30,10 @@ int run()
 	unsigned win_w = 640;
 	unsigned win_h = 640;
 	sdl2::SDL sdl;
-
 	sdl2::VideoSystem sdlVideo;
-
-	sdl2::ImageLoader imgLoader;
-	imgLoader.prepInitPNG(true);
-	imgLoader.init();
-
+	sdl2::ImageLoader imgLoader(IMG_INIT_PNG);
 	sdl2::EventSystem sdlEvents;
-	
+
 	int result;
 
 	result = init_SDL_GL();
@@ -50,6 +45,8 @@ int run()
 	//Create window
 	sdl2::Window window(
 		"game",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
 		win_w, win_h,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
 	);
@@ -149,7 +146,7 @@ int run()
 		glBindVertexArray(0);
 
 		//Update screen
-		SDL_GL_SwapWindow( window.get() );
+		SDL_GL_SwapWindow( window.pointer );
 	}
 	return 0;
 }

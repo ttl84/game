@@ -77,19 +77,13 @@ namespace sdl2{
 	class ImageLoader {
 		int initFlags;
 		int resultFlags;
-		void prepInitFlag(int flag, bool yes)
-		{
-			if(yes) {
-				initFlags |= flag;
-			} else {
-				initFlags &= ~flag;
-			}
-		}
 	public:
-		ImageLoader()
+		ImageLoader(int args)
 		{
-			initFlags = 0;
 			resultFlags = 0;
+			quit();
+			initFlags = args;
+			resultFlags = IMG_Init(initFlags);
 		}
 
 		~ImageLoader()
@@ -97,46 +91,10 @@ namespace sdl2{
 			quit();
 		}
 
-		// These functions prepare initialization data.
-		// Once preparation is complete, use init() to initialize.
-		void prepInitPNG(bool yes)
+		bool isInitialized() const
 		{
-			prepInitFlag(IMG_INIT_PNG, yes);
+			return initFlags == resultFlags;
 		}
-		void prepInitJPG(bool yes)
-		{
-			prepInitFlag(IMG_INIT_JPG, yes);
-		}
-		void prepInitTIF(bool yes)
-		{
-			prepInitFlag(IMG_INIT_TIF, yes);
-		}
-
-		// These functions test the initialization status.
-		bool isInitJPG() const
-		{
-			return resultFlags & IMG_INIT_JPG;
-		}
-		bool isInitPNG() const
-		{
-			return resultFlags & IMG_INIT_PNG;
-		}
-		bool isInitTIF() const
-		{
-			return resultFlags & IMG_INIT_TIF;
-		}
-
-		// This function initializes modules based on initialization data.
-		// After this call, initialization data is reset.
-		// Returns true if desired initialization matches results.
-		bool init()
-		{
-			int arg = initFlags;
-			quit();
-			int resultFlags = IMG_Init(arg);
-			return resultFlags == arg;
-		}
-
 		// Quits any initialized modules and resets initialization data.
 		void quit()
 		{
@@ -148,28 +106,26 @@ namespace sdl2{
 		}
 	};
 
-	class Window {
-		SDL_Window * window;
-	public:
-		Window(char const * name, unsigned width, unsigned height, unsigned flags)
+	struct Window {
+		SDL_Window * pointer;
+
+		Window(const char* title,
+			int         x,
+			int         y,
+			int         w,
+			int         h,
+			Uint32      flags)
 		{
-			window = SDL_CreateWindow( name,
-				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-				width, height,
-				flags );
-			if(window == NULL) {
+			pointer = SDL_CreateWindow( title, x, y, w, h, flags);
+			if(pointer == NULL) {
 				throw Exception(std::string("failed to create sdl window: ") + SDL_GetError());
 			}
 		}
 		~Window()
 		{
-			if(window != NULL) {
-				SDL_DestroyWindow(window);
+			if(pointer != NULL) {
+				SDL_DestroyWindow(pointer);
 			}
-		}
-		SDL_Window* get()
-		{
-			return window;
 		}
 	};
 
@@ -178,7 +134,7 @@ namespace sdl2{
 	public:
 		GLContext(Window& window)
 		{
-			context = SDL_GL_CreateContext( window.get() );
+			context = SDL_GL_CreateContext(window.pointer);
 			if(context == NULL) {
 				throw Exception(std::string("failed to create opengl context: ") + SDL_GetError());
 			}
