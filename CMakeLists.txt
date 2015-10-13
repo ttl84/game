@@ -14,23 +14,23 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors -Wall -stati
 set(LIBS SDL2 SDL2_image)
 if(MINGW)
 	message(STATUS "MinGW is detected.")
-	
+
 	message(STATUS "Setting up link flags for sdl.")
 	set(LIBS mingw32 SDL2main ${LIBS})
-	
+
 endif(MINGW)
 
-if(MSYS)
-	message(STATUS "MSYS is detected.")
-	
+if(WIN32 OR MSYS)
+	message(STATUS "Windows/MSYS is detected.")
+
 	message(STATUS "Setting up link flags for opengl.")
 	set(LIBS ${LIBS} glew32 glu32 opengl32)
-else(UNIX)
+elseif(UNIX)
 	message(STATUS "UNIX is detected.")
 
 	message(STATUS "Setting up link flags for opengl.")
 	set(LIBS ${LIBS} GLEW GLU GL)
-endif(MSYS)
+endif(WIN32 OR MSYS)
 
 message(STATUS "Libraries to link are: ${LIBS}")
 
