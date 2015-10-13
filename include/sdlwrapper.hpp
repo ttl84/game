@@ -161,11 +161,11 @@ namespace sdl2{
 		{
 			isEnd = endness;
 		}
-		operator==(EventIterator const & other)
+		bool operator==(EventIterator const & other)
 		{
 			return isEnd && other.isEnd;
 		}
-		operator!=(EventIterator const & other)
+		bool operator!=(EventIterator const & other)
 		{
 			return !(*this == other);
 		}

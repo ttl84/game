@@ -25,6 +25,11 @@ if(MSYS)
 	
 	message(STATUS "Setting up link flags for opengl.")
 	set(LIBS ${LIBS} glew32 glu32 opengl32)
+else(UNIX)
+	message(STATUS "UNIX is detected.")
+
+	message(STATUS "Setting up link flags for opengl.")
+	set(LIBS ${LIBS} GLEW GLU GL)
 endif(MSYS)
 
 message(STATUS "Libraries to link are: ${LIBS}")

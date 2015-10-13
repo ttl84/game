@@ -1,6 +1,6 @@
 #ifndef OPENGL_UTIL_HPP
 #define OPENGL_UTIL_HPP
-#include "gl/glew.h"
+#include "GL/glew.h"
 #include <string>
 #include <vector>
 #include <exception>
