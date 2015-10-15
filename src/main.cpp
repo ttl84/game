@@ -2,6 +2,9 @@
 #include "opengl_util.hpp"
 #include "SDL2/SDL_opengl.h"
 
+#include "aabb.hpp"
+
+
 #include <iostream>
 #include <string>
 #include <exception>
@@ -150,8 +153,19 @@ int run()
 	}
 	return 0;
 }
+bool testAABB()
+{
+	typedef aabb::AABB<float, 2> Rect;
+	Rect a{{
+		{0, 1},
+		{0, 1}
+	}};
+	Rect b = a;
+	return aabb::intersect(a, b);
+}
 int main(int argc, char** args)
 {
+
 	try {
 		run();
 	} catch(const std::exception & e) {
