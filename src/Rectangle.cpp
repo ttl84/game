@@ -46,7 +46,7 @@ bool Intersect(Rectangle rect1, Rectangle rect2){
 bool Contains(Rectangle rect, float x, float y){
     bool returnVal = false;
 
-    if(x <= rect.getRight() && x >= rect.getLeft() && y <= rect.getTop() && y >= rect.getBottom()){
+    if(x < rect.getRight() && x > rect.getLeft() && y < rect.getTop() && y > rect.getBottom()){
         returnVal = true;
     }
 
