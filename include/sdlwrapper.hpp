@@ -6,6 +6,7 @@
 #include "SDL2/SDL_image.h"
 #include <string>
 #include <exception>
+#include <vector>
 namespace sdl2{
 	class Exception : public std::exception{
 		std::string msg;
@@ -74,6 +75,33 @@ namespace sdl2{
 		}
 	};
 
+	class Image{
+	public:
+		unsigned width, height, bytesPerPixel;
+		std::vector<uint8_t> bytes;
+	};
+
+	class Surface{
+		SDL_Surface * ptr;
+	public:
+		SDL_Surface * getPtr() const
+		{
+			return ptr;
+		}
+
+		Surface(SDL_Surface* surface)
+			:ptr(surface)
+		{
+
+		}
+		~Surface()
+		{
+			if(ptr != NULL) {
+				SDL_FreeSurface(ptr);
+			}
+		}
+	};
+	
 	class ImageLoader {
 		int initFlags;
 		int resultFlags;
@@ -89,6 +117,37 @@ namespace sdl2{
 		~ImageLoader()
 		{
 			quit();
+		}
+
+		Image loadRGBA(std::string filepath)
+		{
+			Surface surf(IMG_Load(filepath.c_str()));
+			if(surf.getPtr() == NULL) {
+				return Image();
+			}
+
+			SDL_Surface * surface = surf.getPtr();
+			SDL_PixelFormat * format = surface->format;
+
+			Image img;
+			img.width = surface->w;
+			img.height = surface->h;
+			img.bytesPerPixel = format->BytesPerPixel;
+
+			if(img.bytesPerPixel == 4) {
+				for(unsigned i = 0; i < img.width * img.height; i++) {
+					Uint32 * pixels = (Uint32*)(surface->pixels);
+					Uint8 r = 0, g = 0, b = 0, a = 0;
+					SDL_GetRGBA(pixels[i], format, &r, &g, &b, &a);
+					img.bytes.push_back(r);
+					img.bytes.push_back(g);
+					img.bytes.push_back(b);
+					img.bytes.push_back(a);
+				}
+			} else {
+				throw Exception("loadRGBA: unable to load image format");
+			}
+			return img;
 		}
 
 		bool isInitialized() const
