@@ -1,13 +1,12 @@
 #version 330 core
-layout(location = 0) in vec3 inPosition;
-layout(location = 1) in vec3 inColour;
+layout(location = 0) in vec2 inPosition;
 
 uniform vec3 ourColour;
 out vec3 vertexColour;
 void main()
 {
-	gl_Position.xyz = inPosition + ourColour;
-	gl_Position.w = 1.0;
+	gl_Position.xy = inPosition + ourColour.xy;
+	gl_Position.z = 1.0;
 
-	vertexColour = inColour + ourColour;
+	vertexColour = ourColour;
 }

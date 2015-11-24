@@ -74,22 +74,20 @@ int run()
 	glViewport(0, 0, win_w, win_h);
 
 
-
-
 	// shader program
-	GLuint programID;
-	gl::programFromShaderFiles(programID, {
+	gl::Program program({
 		{GL_VERTEX_SHADER, "../shaders/vertex.glsl"},
 		{GL_FRAGMENT_SHADER, "../shaders/fragment.glsl"}
 	});
 
 	// vertex data
 	GLfloat vertices[] = {
-		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f
+		0.5f,  0.5f,
+		0.5f, -0.5f,
+		-0.5f, -0.5f,
+		-0.5f,  0.5f,
 	};
+
 
 	GLuint indices[] = {  // Note that we start from 0!
 		0, 1, 3,   // First Triangle
@@ -110,11 +108,8 @@ int run()
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), NULL);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)NULL);
 		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -136,8 +131,8 @@ int run()
 			GLfloat greenValue = (std::sin(timeValue * 0.001)) / 2;
 			GLfloat redValue = (std::sin(timeValue * 0.0011)) / 2;
 			GLfloat blueValue = (std::sin(timeValue * 0.0012)) / 2;
-			GLint vertexColorLocation = glGetUniformLocation(programID, "ourColour");
-			glUseProgram(programID);
+			GLint vertexColorLocation = glGetUniformLocation(program.id, "ourColour");
+			glUseProgram(program.id);
 			glUniform3f(vertexColorLocation, redValue, greenValue, blueValue);
 		}
 		// render
