@@ -149,7 +149,7 @@ public:
 };
 
 void programFromShaderFiles(GLuint& programID,
-	const std::vector<std::pair<GLenum, char const*>> sources)
+	const std::vector<std::pair<GLenum, char const*>>& sources)
 {
 	std::vector<Shader> shaders;
 	for(auto p : sources) {
@@ -164,5 +164,18 @@ void programFromShaderFiles(GLuint& programID,
 	}
 
 	programFromShaders(programID, shaderIds);
+}
+
+Program::Program(const std::vector<std::pair<GLenum, char const*>>& sources)
+{
+	id = 0;
+	programFromShaderFiles(id, sources);
+}
+Program::~Program()
+{
+	if(id != 0) {
+		glDeleteProgram(id);
+		id = 0;
+	}
 }
 } // end namespace gl

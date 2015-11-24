@@ -36,7 +36,16 @@ void shaderFromFile(GLuint & id, GLenum shaderType, char const* source);
 // If the program doesn't link, an exception will be thrown.
 void programFromShaders(GLuint & programID, const std::vector<GLuint> & shaders);
 void programFromShaderFiles(GLuint& programID,
-	const std::vector<std::pair<GLenum, char const*>> sources);
+	const std::vector<std::pair<GLenum, char const*>>& sources);
 
+
+class Program {
+public:
+	GLuint id;
+	Program(const std::vector<std::pair<GLenum, char const*>>& sources);
+	~Program();
+	Program(const Program& other) = delete;
+	Program & operator=(const Program& other) = delete;
+};
 } // end namespace gl
 #endif
