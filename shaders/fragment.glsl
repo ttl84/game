@@ -1,9 +1,14 @@
 #version 330 core
 in vec3 vertexColour;
-out vec3 colour;
+in vec2 fragTexCoord;
+out vec4 colour;
 
+uniform sampler2D uFragTexture;
 void main()
 {
-	colour.xy = vertexColour.xy;
-	colour.z = 1.0;
+	vec4 texColour = texture(uFragTexture, fragTexCoord);
+	if(texColour.a < 1.0) {
+		discard;
+	}
+	colour = texColour;
 }

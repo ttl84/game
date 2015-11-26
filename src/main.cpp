@@ -1,9 +1,7 @@
 #include "sdlwrapper.hpp"
 #include "opengl_util.hpp"
-#include "SDL2/SDL_opengl.h"
 
 #include "aabb.hpp"
-
 
 #include <iostream>
 #include <string>
@@ -12,22 +10,7 @@
 #include <vector>
 #include <cmath>
 
-int init_SDL_GL()
-{
-	//Use OpenGL 3.3 core
-	int err;
 
-	err = SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
-	if(err) return -1;
-
-	err = SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
-	if(err) return -1;
-
-	err = SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
-	if(err) return -1;
-
-	return 0;
-}
 int run()
 {
 	unsigned win_w = 640;
@@ -37,9 +20,7 @@ int run()
 	sdl2::ImageLoader imgLoader(IMG_INIT_PNG);
 	sdl2::EventSystem sdlEvents;
 
-	int result;
-
-	result = init_SDL_GL();
+	int result = sdl2::initGL();
 	if(result != 0) {
 		std::cout << SDL_GetError() << '\n';
 		return -1;
@@ -82,10 +63,10 @@ int run()
 
 	// vertex data
 	GLfloat vertices[] = {
-		0.5f,  0.5f,
-		0.5f, -0.5f,
-		-0.5f, -0.5f,
-		-0.5f,  0.5f,
+		0.5,  0.5, 1, 1,
+		0.5, -0.5, 1, 0,
+		-0.5, -0.5, 0, 0,
+		-0.5,  0.5, 0, 1
 	};
 
 
@@ -108,13 +89,25 @@ int run()
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)NULL);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)NULL);
 		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2*sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+		sdl2::Image image = imgLoader.loadRGBA("../img/drawing.png");
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes.data());
+		glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -139,6 +132,7 @@ int run()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);

@@ -101,7 +101,7 @@ namespace sdl2{
 			}
 		}
 	};
-	
+
 	class ImageLoader {
 		int initFlags;
 		int resultFlags;
@@ -265,6 +265,22 @@ namespace sdl2{
 		}
 	};
 
+	int initGL()
+	{
+		//Use OpenGL 3.3 core
+		int err;
+
+		err = SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
+		if(err) return -1;
+
+		err = SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
+		if(err) return -1;
+
+		err = SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+		if(err) return -1;
+
+		return 0;
+	}
 } // end namespace sdl2
 
 #endif
