@@ -7,4 +7,6 @@ public:
 	unsigned width, height, bytesPerPixel;
 	std::vector<uint8_t> bytes;
 };
+
+Image flipVertically(const Image & img);
 #endif
