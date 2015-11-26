@@ -103,7 +103,7 @@ int run()
 	GLuint texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-		sdl2::Image image = imgLoader.loadRGBA("../img/drawing.png");
+		Image image = imgLoader.loadRGBA("../img/drawing.png");
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes.data());
 		glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);

@@ -6,7 +6,8 @@
 #include "SDL2/SDL_image.h"
 #include <string>
 #include <exception>
-#include <vector>
+
+#include "image.hpp"
 namespace sdl2{
 	class Exception : public std::exception{
 		std::string msg;
@@ -75,11 +76,7 @@ namespace sdl2{
 		}
 	};
 
-	class Image{
-	public:
-		unsigned width, height, bytesPerPixel;
-		std::vector<uint8_t> bytes;
-	};
+
 
 	class Surface{
 		SDL_Surface * ptr;
