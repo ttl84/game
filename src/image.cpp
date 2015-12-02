@@ -1,4 +1,28 @@
 #include "image.hpp"
+
+// T must be an array-like type.
+// This function is a generalization of array reversal.
+// Instead of swapping the first and last element, multiple elemnts are swapped
+//  at one time.
+// [span] is the number of elements to swap at one time.
+// After running this function, dst should be the span-reversed version of src.
+// example:
+// src = [1 2 3 4 5 6 7 8 9 0]
+// dst = []
+// reverseSpan(src, dst, 2);
+// dst = [9 0 7 8 5 6 3 4 1 2]
+template<class T>
+void reverseSpan(T const & src, T & dst, unsigned span)
+{
+	dst.clear();
+	auto it = std::end(src) - span;
+	while(it >= std::begin(src)) {
+		auto dstEnd = std::end(dst);
+		dst.insert(dstEnd, it, it+span);
+		it = it - span;
+	}
+}
+
 Image flipVertically(const Image & img)
 {
 	Image flipped;
@@ -7,10 +31,6 @@ Image flipVertically(const Image & img)
 	flipped.height = img.height;
 
 	unsigned rowBytes = img.bytesPerPixel * img.width;
-	auto it = img.bytes.end() - rowBytes;
-	while(it >= img.bytes.begin()) {
-		flipped.bytes.insert(flipped.bytes.end(), it, it+rowBytes);
-		it = it - rowBytes;
-	}
+	reverseSpan(img.bytes, flipped.bytes, rowBytes);
 	return flipped;
 }
