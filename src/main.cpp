@@ -63,10 +63,10 @@ int run()
 
 	// vertex data
 	GLfloat vertices[] = {
-		0.5,  0.5, 1, 1,
-		0.5, -0.5, 1, 0,
+		0.5,  0.5, 0.5, 0.5,
+		0.5, -0.5, 0.5, 0,
 		-0.5, -0.5, 0, 0,
-		-0.5,  0.5, 0, 1
+		-0.5,  0.5, 0, 0.5
 	};
 
 
@@ -89,9 +89,11 @@ int run()
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+		// vertex coordinates
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)NULL);
 		glEnableVertexAttribArray(0);
 
+		// texture coordinates
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2*sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 
