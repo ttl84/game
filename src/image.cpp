@@ -34,3 +34,15 @@ Image flipVertically(const Image & img)
 	reverseSpan(img.bytes, flipped.bytes, rowBytes);
 	return flipped;
 }
+
+bool Image::isSane() const
+{
+	unsigned byteCount = width * height * bytesPerPixel;
+	return byteCount != 0 && byteCount == bytes.size();
+}
+
+bool Image::isEmpty() const
+{
+	unsigned byteCount = width * height * bytesPerPixel;
+	return byteCount == 0;
+}
