@@ -35,6 +35,30 @@ Image flipVertically(const Image & img)
 	return flipped;
 }
 
+bool sameFormat(const Image & img1, const Image & img2)
+{
+	return img1.bytesPerPixel == img2.bytesPerPixel;
+}
+
+int blit(const Image & src, Image & dst, unsigned x, unsigned y)
+{
+	if(!src.isSane() || !dst.isSane() || !sameFormat(src, dst)) {
+		return -1;
+	}
+	unsigned xEnd = x + src.width;
+	unsigned yEnd = y + src.height;
+	if(x > dst.width || y > dst.height ||
+		xEnd> dst.width || yEnd > dst.height) {
+		return -2;
+	}
+
+	for(unsigned i = 0; i < src.height; i++) {
+		std::copy(src.ptr(i, 0, 0), src.ptr(i, src.width, 0),
+			dst.ptr(y+i, x, 0));
+	}
+	return 0;
+}
+
 bool Image::isSane() const
 {
 	unsigned byteCount = width * height * bytesPerPixel;
@@ -45,4 +69,17 @@ bool Image::isEmpty() const
 {
 	unsigned byteCount = width * height * bytesPerPixel;
 	return byteCount == 0;
+}
+
+uint8_t * Image::ptr(unsigned row, unsigned column, unsigned byte)
+{
+	unsigned rowOffset = row * width * bytesPerPixel;
+	unsigned columnOffset = column * bytesPerPixel;
+	return bytes.data() + rowOffset + columnOffset + byte;
+}
+uint8_t const * Image::ptr(unsigned row, unsigned column, unsigned byte) const
+{
+	unsigned rowOffset = row * width * bytesPerPixel;
+	unsigned columnOffset = column * bytesPerPixel;
+	return bytes.data() + rowOffset + columnOffset + byte;
 }
