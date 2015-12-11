@@ -29,7 +29,6 @@ public:
 bool sameFormat(const Image & img1, const Image & img2);
 
 unsigned getByteCount(const Image & img);
-bool isSane(const Image & img);
 bool isNull(const Image & img);
 
 // Flip the image vertically, so that the last row becomes the first and the
