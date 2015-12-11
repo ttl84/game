@@ -63,10 +63,10 @@ int run()
 
 	// vertex data
 	GLfloat vertices[] = {
-		0.5,  0.5, 0.5, 0.5,
-		0.5, -0.5, 0.5, 0,
+		0.5,  0.5, 1, 1,
+		0.5, -0.5, 1, 0,
 		-0.5, -0.5, 0, 0,
-		-0.5,  0.5, 0, 0.5
+		-0.5,  0.5, 0, 1
 	};
 
 
@@ -106,8 +106,10 @@ int run()
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 		Image image = imgLoader.loadRGBA("../img/drawing.png");
-		image = flipVertically(image);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes.data());
+		flipVertically(image);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+			image.getWidth(), image.getHeight(),
+			0, GL_RGBA, GL_UNSIGNED_BYTE, image.ptr(0, 0, 0));
 		glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 

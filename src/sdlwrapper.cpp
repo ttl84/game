@@ -11,21 +11,19 @@ namespace sdl2{
 		SDL_Surface * surface = surf.getPtr();
 		SDL_PixelFormat * format = surface->format;
 
-		Image img;
-		img.width = surface->w;
-		img.height = surface->h;
-		img.bytesPerPixel = format->BytesPerPixel;
-
-		if(img.bytesPerPixel == 4) {
-			for(unsigned i = 0; i < img.width * img.height; i++) {
+		Image img(format->BytesPerPixel, surface->w, surface->h);
+		std::vector<uint8_t> bytes;
+		if(img.getBytesPerPixel() == 4) {
+			for(unsigned i = 0; i < img.getWidth() * img.getHeight(); i++) {
 				Uint32 * pixels = (Uint32*)(surface->pixels);
 				Uint8 r = 0, g = 0, b = 0, a = 0;
 				SDL_GetRGBA(pixels[i], format, &r, &g, &b, &a);
-				img.bytes.push_back(r);
-				img.bytes.push_back(g);
-				img.bytes.push_back(b);
-				img.bytes.push_back(a);
+				bytes.push_back(r);
+				bytes.push_back(g);
+				bytes.push_back(b);
+				bytes.push_back(a);
 			}
+			img.copy(bytes);
 		} else {
 			throw Exception("loadRGBA: unable to load image format");
 		}

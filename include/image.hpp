@@ -3,24 +3,38 @@
 #include <vector>
 #include <cstdint>
 class Image{
-public:
-	unsigned width, height, bytesPerPixel;
+	unsigned bytesPerPixel, width, height;
 	std::vector<uint8_t> bytes;
+public:
+	// Create a null image. It has no dimensions and no data.
+	Image();
 
-	// returns true if the image has an area of 0.
-	bool isEmpty() const;
+	// Create an empty Image with the dimensions.
+	Image(unsigned bytesPerPixel, unsigned width, unsigned height);
 
-	// returns true if the image has a non zero area and the byte coutn matches
-	// the size of the "bytes" array.
-	bool isSane() const;
+	// Get dimensions
+	unsigned getWidth() const;
+	unsigned getHeight() const;
+	unsigned getBytesPerPixel() const;
 
+	// Get the pointer to a specific byte
 	uint8_t * ptr(unsigned row, unsigned column, unsigned byte);
 	uint8_t const * ptr(unsigned row, unsigned column, unsigned byte) const;
+
+	// Copies data into the image. Vector length must match.
+	// Returns zero for success, non zero otherwise.
+	int copy(std::vector<uint8_t> const &);
 };
 
 bool sameFormat(const Image & img1, const Image & img2);
 
-Image flipVertically(const Image & img);
+unsigned getByteCount(const Image & img);
+bool isSane(const Image & img);
+bool isNull(const Image & img);
+
+// Flip the image vertically, so that the last row becomes the first and the
+// first becomes the last.
+void flipVertically(Image & img);
 
 // perform of blit of src into dst. The whole of src will be blitted at location
 // (x, y).
