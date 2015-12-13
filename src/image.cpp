@@ -35,6 +35,14 @@ int Image::copy(std::vector<uint8_t> const & data)
 	}
 }
 
+void Image::copy(const Image & img)
+{
+	bytesPerPixel = img.bytesPerPixel;
+	width = img.width;
+	height = img.height;
+	bytes = img.bytes;
+}
+
 uint8_t * Image::ptr(unsigned row, unsigned column, unsigned byte)
 {
 	unsigned rowOffset = row * width * bytesPerPixel;

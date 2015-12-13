@@ -24,6 +24,8 @@ public:
 	// Copies data into the image. Vector length must match.
 	// Returns zero for success, non zero otherwise.
 	int copy(std::vector<uint8_t> const &);
+
+	void copy(const Image & img);
 };
 
 bool sameFormat(const Image & img1, const Image & img2);
