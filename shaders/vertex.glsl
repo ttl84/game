@@ -2,15 +2,13 @@
 layout(location = 0) in vec2 inPosition;
 layout(location = 1) in vec2 vTexCoord;
 
-uniform vec3 ourColour;
+uniform mat3 transform;
+
 out vec3 vertexColour;
-out vec2 fragTexCoord;
+out vec2 fTexCoord;
 void main()
 {
-	gl_Position.xy = inPosition + ourColour.xy;
-	gl_Position.z = 1.0;
+	gl_Position.xyz =  transform * vec3(inPosition, 1.0);
 
-	vertexColour = ourColour;
-
-	fragTexCoord = vTexCoord;
+	fTexCoord = vTexCoord;
 }

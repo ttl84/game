@@ -3,6 +3,10 @@
 
 #include "aabb.hpp"
 
+#include "glm/glm.hpp"
+#include "glm/gtx/matrix_transform_2d.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include <iostream>
 #include <string>
 #include <exception>
@@ -114,8 +118,13 @@ int run()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+	glUseProgram(program.id);
+
+
+
+	GLuint transformLoc = glGetUniformLocation(program.id, "transform");
 
 	bool running = true;
 	while(running){
@@ -124,18 +133,14 @@ int run()
 			running = false;
 		}
 
-		{
-			GLfloat timeValue = SDL_GetTicks();
-			GLfloat greenValue = (std::sin(timeValue * 0.001)) / 2;
-			GLfloat redValue = (std::sin(timeValue * 0.0011)) / 2;
-			GLfloat blueValue = (std::sin(timeValue * 0.0012)) / 2;
-			GLint vertexColorLocation = glGetUniformLocation(program.id, "ourColour");
-			glUseProgram(program.id);
-			glUniform3f(vertexColorLocation, redValue, greenValue, blueValue);
-		}
+		glm::mat3 trans;
+		trans = glm::scale(trans, glm::vec2(1.5, 0.5));
+		glUniformMatrix3fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 		// render
 
 		glClear(GL_COLOR_BUFFER_BIT);
+
+
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
