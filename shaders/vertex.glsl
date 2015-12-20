@@ -4,7 +4,6 @@ layout(location = 1) in vec2 vTexCoord;
 
 uniform mat3 transform;
 
-out vec3 vertexColour;
 out vec2 fTexCoord;
 void main()
 {
