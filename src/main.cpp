@@ -126,15 +126,73 @@ int run()
 
 	GLuint transformLoc = glGetUniformLocation(program.id, "transform");
 
+	float x = 0, y = 0, angle = 0;
+	bool moveLeft = false, moveRight = false, moveUp = false, moveDown = false;
+	bool turnLeft = false, turnRight = false;
+
 	bool running = true;
 	while(running){
 		for(SDL_Event e : sdlEvents) {
-			if(e.type == SDL_QUIT)
-			running = false;
+			if(e.type == SDL_QUIT) {
+				running = false;
+			} else if(e.type == SDL_KEYDOWN) {
+				if(e.key.keysym.sym == SDLK_LEFT) {
+					moveLeft = true;
+				} else if(e.key.keysym.sym == SDLK_RIGHT) {
+					moveRight = true;
+				} else if(e.key.keysym.sym == SDLK_UP) {
+					moveUp = true;
+				} else if(e.key.keysym.sym == SDLK_DOWN) {
+					moveDown = true;
+				} else if(e.key.keysym.sym == SDLK_a) {
+					turnLeft = true;
+				} else if(e.key.keysym.sym == SDLK_d) {
+					turnRight = true;
+				}
+			} else if(e.type == SDL_KEYUP) {
+				if(e.key.keysym.sym == SDLK_LEFT) {
+					moveLeft = false;
+				} else if(e.key.keysym.sym == SDLK_RIGHT) {
+					moveRight = false;
+				} else if(e.key.keysym.sym == SDLK_UP) {
+					moveUp = false;
+				} else if(e.key.keysym.sym == SDLK_DOWN) {
+					moveDown = false;
+				} else if(e.key.keysym.sym == SDLK_a) {
+					turnLeft = false;
+				} else if(e.key.keysym.sym == SDLK_d) {
+					turnRight = false;
+				}
+			}
+		}
+
+		if(moveLeft) {
+			x -= 0.01;
+		}
+
+		if(moveRight) {
+			x += 0.01;
+		}
+
+		if(moveUp) {
+			y += 0.01;
+		}
+
+		if(moveDown) {
+			y -= 0.01;
+		}
+
+		if(turnLeft) {
+			angle -= 0.01;
+		}
+
+		if(turnRight) {
+			angle += 0.01;
 		}
 
 		glm::mat3 trans;
-		trans = glm::scale(trans, glm::vec2(1.5, 0.5));
+		trans = glm::translate(trans, glm::vec2(x, y));
+		trans = glm::rotate(trans, angle);
 		glUniformMatrix3fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 		// render
 
