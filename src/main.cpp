@@ -3,10 +3,6 @@
 
 #include "aabb.hpp"
 
-#include "glm/glm.hpp"
-#include "glm/gtx/matrix_transform_2d.hpp"
-#include "glm/gtc/type_ptr.hpp"
-
 #include <iostream>
 #include <string>
 #include <exception>
@@ -70,13 +66,19 @@ int run()
 		0.5,  0.5, 1, 1,
 		0.5, -0.5, 1, 0,
 		-0.5, -0.5, 0, 0,
-		-0.5,  0.5, 0, 1
+		-0.5,  0.5, 0, 1,
+		0.7,  0.5, 1, 1,
+		0.7, -0.5, 1, 0,
+		-0.1, -0.5, 0, 0,
+		-0.1,  0.5, 0, 1
 	};
 
 
 	GLuint indices[] = {  // Note that we start from 0!
 		0, 1, 3,   // First Triangle
-		1, 2, 3    // Second Triangle
+		1, 2, 3,    // Second Triangle
+		4, 5, 7,
+		5 ,6, 7
 	};
 
 	GLuint EBO;
@@ -183,11 +185,11 @@ int run()
 		}
 
 		if(turnLeft) {
-			angle -= 0.01;
+			angle += 0.01;
 		}
 
 		if(turnRight) {
-			angle += 0.01;
+			angle -= 0.01;
 		}
 
 		glm::mat3 trans;
@@ -202,7 +204,7 @@ int run()
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		//Update screen

@@ -5,6 +5,10 @@
 #include <vector>
 #include <exception>
 
+#include "glm/glm.hpp"
+#include "glm/gtx/matrix_transform_2d.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 namespace gl{
 class Exception : public std::exception{
 	std::string msg;
