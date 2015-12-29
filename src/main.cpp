@@ -63,14 +63,14 @@ int run()
 
 	// vertex data
 	GLfloat vertices[] = {
-		0.5,  0.5, 1, 1,
-		0.5, -0.5, 1, 0,
-		-0.5, -0.5, 0, 0,
-		-0.5,  0.5, 0, 1,
-		0.7,  0.5, 1, 1,
-		0.7, -0.5, 1, 0,
-		-0.1, -0.5, 0, 0,
-		-0.1,  0.5, 0, 1
+		0.5,  0.5, 0, 1, 1,
+		0.5, -0.5, 0, 1, 0,
+		-0.5, -0.5, 0, 0, 0,
+		-0.5,  0.5, 0, 0, 1,
+		0.7,  0.5, 0, 1, 1,
+		0.7, -0.5, 0, 1, 0,
+		-0.1, -0.5, 0, 0, 0,
+		-0.1,  0.5, 0, 0, 1
 	};
 
 
@@ -96,11 +96,11 @@ int run()
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 		// vertex coordinates
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)NULL);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)NULL);
 		glEnableVertexAttribArray(0);
 
 		// texture coordinates
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2*sizeof(GLfloat)));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3*sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -192,10 +192,10 @@ int run()
 			angle -= 0.01;
 		}
 
-		glm::mat3 trans;
-		trans = glm::translate(trans, glm::vec2(x, y));
-		trans = glm::rotate(trans, angle);
-		glUniformMatrix3fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+		glm::mat4 trans;
+		trans = glm::translate(trans, glm::vec3(x, y, 0));
+		trans = glm::rotate(trans, angle, glm::vec3(0, 0, 1.0));
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 		// render
 
 		glClear(GL_COLOR_BUFFER_BIT);
