@@ -29,21 +29,29 @@ IndexedQuadID Quads::addIndex(RealQuadID realID)
 
 void Quads::sendVertexData(unsigned vbo) const
 {
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex2), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		vertices.size() * sizeof(Quads::VertexType),
+		vertices.data(),
+		GL_STATIC_DRAW);
 }
 void Quads::sendIndexData(unsigned vbo) const
 {
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), indices.data(), GL_STATIC_DRAW);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
+		indices.size() * sizeof(Quads::IndexType),
+		indices.data(),
+		GL_STATIC_DRAW);
 }
 
 void Quads::positionVertexAttribPointer(unsigned location) const
 {
 	glVertexAttribPointer(
 		location,			// location number of vertex array
-		2,					// number of components in position vector
+		Quads::VertexType::Components,					// number of components in position vector
 		GL_FLOAT,			// type of vertex component
 		GL_FALSE,			// normalized
-		sizeof(Vertex2),	// stride
+		sizeof(Quads),		// stride
 		(GLvoid*)NULL);
 }
 
@@ -51,9 +59,9 @@ void Quads::textureCoordinateVertexAttribPointer(unsigned location) const
 {
 	glVertexAttribPointer(
 		location,
-		2,
+		Quads::VertexType::Components,
 		GL_FLOAT,
 		GL_FALSE,
-		sizeof(Vertex2),
-		(GLvoid*) offsetof(Vertex2, texture));
+		sizeof(Quads::VertexType),
+		(GLvoid*) offsetof(Quads::VertexType, texture));
 }
