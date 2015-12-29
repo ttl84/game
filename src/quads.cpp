@@ -2,7 +2,7 @@
 #include <cstddef> // for offsetof
 RealQuadID Quads::addVertex(Quad q)
 {
-	RealQuadID id = {unsigned(vertices.size()) / 4};
+	RealQuadID id = {unsigned(vertices.size())};
 	vertices.insert(
 		vertices.end(),
 		std::begin(q.vertex),
@@ -12,13 +12,13 @@ RealQuadID Quads::addVertex(Quad q)
 
 IndexedQuadID Quads::addIndex(RealQuadID realID)
 {
-	unsigned i = realID.value * 4;
+	unsigned i = realID.value;
 	unsigned elements [] = {
 		i+0, i+1, i+3,
 		i+1, i+2, i+3
 	};
 
-	IndexedQuadID id = {unsigned(indices.size()) / 6};
+	IndexedQuadID id = {unsigned(indices.size())};
 	indices.insert(
 		indices.end(),
 		std::begin(elements),
@@ -26,8 +26,32 @@ IndexedQuadID Quads::addIndex(RealQuadID realID)
 	return id;
 }
 
+unsigned Quads::indexDataCount() const
+{
+	return indices.size();
+}
 
-void Quads::sendVertexData(unsigned vbo) const
+unsigned Quads::vertexDataByteCount() const
+{
+	return vertices.size() * sizeof(Quads::VertexType);
+}
+
+unsigned Quads::indexDataByteCount() const
+{
+	return indices.size() * sizeof(Quads::IndexType);
+}
+
+const Quads::VertexType * Quads::vertexData() const
+{
+	return vertices.data();
+}
+
+const Quads::IndexType * Quads::indexData() const
+{
+	return indices.data();
+}
+/*
+void Quads::sendVertexData() const
 {
 	glBufferData(
 		GL_ARRAY_BUFFER,
@@ -35,7 +59,7 @@ void Quads::sendVertexData(unsigned vbo) const
 		vertices.data(),
 		GL_STATIC_DRAW);
 }
-void Quads::sendIndexData(unsigned vbo) const
+void Quads::sendIndexData() const
 {
 	glBufferData(
 		GL_ELEMENT_ARRAY_BUFFER,
@@ -65,3 +89,4 @@ void Quads::textureCoordinateVertexAttribPointer(unsigned location) const
 		sizeof(Quads::VertexType),
 		(GLvoid*) offsetof(Quads::VertexType, texture));
 }
+*/

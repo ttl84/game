@@ -23,8 +23,13 @@ struct IndexedQuadID{
 // This is a list of quads.
 // Each quad must have all its vertices added consecutively.
 class Quads{
-	typedef short IndexType;
+public:
+	typedef unsigned short IndexType;
+	static const GLuint IndexTypeID = GL_UNSIGNED_SHORT;
+
 	typedef Vertex3 VertexType;
+
+private:
 	std::vector<Vertex3> vertices;
 	std::vector<IndexType> indices;
 public:
@@ -38,11 +43,11 @@ public:
 	// returns the quad number.
 	IndexedQuadID addIndex(RealQuadID quadID);
 
-	void sendVertexData(unsigned vbo) const;
-	void sendIndexData(unsigned ebo) const;
-
-	void positionVertexAttribPointer(unsigned location) const;
-	void textureCoordinateVertexAttribPointer(unsigned location) const;
+	unsigned indexDataCount() const;
+	unsigned vertexDataByteCount() const;
+	unsigned indexDataByteCount() const;
+	const VertexType * vertexData() const;
+	const IndexType * indexData() const;
 };
 
 #endif

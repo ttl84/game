@@ -2,6 +2,7 @@
 #include "opengl_util.hpp"
 
 #include "aabb.hpp"
+#include "quads.hpp"
 
 #include <iostream>
 #include <string>
@@ -62,24 +63,23 @@ int run()
 	});
 
 	// vertex data
-	GLfloat vertices[] = {
-		0.5,  0.5, 0, 1, 1,
-		0.5, -0.5, 0, 1, 0,
-		-0.5, -0.5, 0, 0, 0,
-		-0.5,  0.5, 0, 0, 1,
-		0.7,  0.5, 0, 1, 1,
-		0.7, -0.5, 0, 1, 0,
-		-0.1, -0.5, 0, 0, 0,
-		-0.1,  0.5, 0, 0, 1
+	Quads quads;
+	Quad quad1{
+		Vertex3{{0.5,  0.5, 0}, {1, 1}},
+		Vertex3{{0.5, -0.5, 0}, {1, 0}},
+		Vertex3{{-0.5, -0.5, 0}, {0, 0}},
+		Vertex3{{-0.5,  0.5, 0}, {0, 1}}
 	};
-
-
-	GLuint indices[] = {  // Note that we start from 0!
-		0, 1, 3,   // First Triangle
-		1, 2, 3,    // Second Triangle
-		4, 5, 7,
-		5 ,6, 7
+	Quad quad2 = {
+		Vertex3{{0.7,  0.5, 0}, {1, 1}},
+		Vertex3{{0.7, -0.5, 0}, {1, 0}},
+		Vertex3{{-0.1, -0.5, 0}, {0, 0}},
+		Vertex3{{-0.1,  0.5, 0}, {0, 1}}
 	};
+	RealQuadID id1 = quads.addVertex(quad1);
+	RealQuadID id2 = quads.addVertex(quad2);
+	quads.addIndex(id1);
+	quads.addIndex(id2);
 
 	GLuint EBO;
 	glGenBuffers(1, &EBO);
@@ -93,18 +93,40 @@ int run()
 	glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			quads.vertexDataByteCount(),
+			quads.vertexData(),
+			GL_STATIC_DRAW);
 
 		// vertex coordinates
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)NULL);
+		glVertexAttribPointer(
+			0,
+			Quads::VertexType::PositionComponents,
+			GL_FLOAT,
+			GL_FALSE,
+			sizeof(Quads::VertexType),
+			(GLvoid*)0
+		);
 		glEnableVertexAttribArray(0);
 
 		// texture coordinates
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3*sizeof(GLfloat)));
+		glVertexAttribPointer(
+			1,
+			Quads::VertexType::TextureComponents,
+			GL_FLOAT,
+			GL_FALSE,
+			sizeof(Quads::VertexType),
+			(GLvoid*) offsetof(Quads::VertexType, texture)
+		);
 		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		glBufferData(
+			GL_ELEMENT_ARRAY_BUFFER,
+			quads.indexDataByteCount(),
+			quads.indexData(),
+			GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 
@@ -204,7 +226,7 @@ int run()
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, quads.indexDataCount(), Quads::IndexTypeID, 0);
 		glBindVertexArray(0);
 
 		//Update screen
