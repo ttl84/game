@@ -48,7 +48,7 @@ void Quads::positionVertexAttribPointer(unsigned location) const
 {
 	glVertexAttribPointer(
 		location,			// location number of vertex array
-		Quads::VertexType::Components,					// number of components in position vector
+		Quads::VertexType::PositionComponents,					// number of components in position vector
 		GL_FLOAT,			// type of vertex component
 		GL_FALSE,			// normalized
 		sizeof(Quads),		// stride
@@ -59,7 +59,7 @@ void Quads::textureCoordinateVertexAttribPointer(unsigned location) const
 {
 	glVertexAttribPointer(
 		location,
-		Quads::VertexType::Components,
+		Quads::VertexType::TextureComponents,
 		GL_FLOAT,
 		GL_FALSE,
 		sizeof(Quads::VertexType),

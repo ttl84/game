@@ -3,7 +3,8 @@
 #include "opengl_util.hpp"
 #include <vector>
 struct Vertex3 {
-	static const unsigned Components = 3;
+	static const unsigned PositionComponents = 3;
+	static const unsigned TextureComponents = 2;
 	GLfloat position[3];
 	GLfloat texture[2];
 };
