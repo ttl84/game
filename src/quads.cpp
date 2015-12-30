@@ -1,8 +1,21 @@
 #include "quads.hpp"
 #include <cstddef> // for offsetof
+RealQuadID vertexNumberToRealQuadID(unsigned i)
+{
+	return RealQuadID{i / 4};
+}
+unsigned realQuadIDToVertexNumber(RealQuadID id)
+{
+	return id.value * 4;
+}
+IndexedQuadID indexNumberToIndexedQuadID(unsigned i)
+{
+	return IndexedQuadID{i / 6};
+}
+
 RealQuadID Quads::addVertex(Quad q)
 {
-	RealQuadID id = {unsigned(vertices.size())};
+	RealQuadID id = vertexNumberToRealQuadID(vertices.size());
 	vertices.insert(
 		vertices.end(),
 		std::begin(q.vertex),
@@ -12,23 +25,35 @@ RealQuadID Quads::addVertex(Quad q)
 
 IndexedQuadID Quads::addIndex(RealQuadID realID)
 {
-	unsigned i = realID.value;
+	unsigned i = realQuadIDToVertexNumber(realID);
 	unsigned elements [] = {
 		i+0, i+1, i+3,
 		i+1, i+2, i+3
 	};
 
-	IndexedQuadID id = {unsigned(indices.size())};
+	IndexedQuadID id = indexNumberToIndexedQuadID(indices.size());
 	indices.insert(
 		indices.end(),
 		std::begin(elements),
 		std::end(elements));
+	Quads::MatrixType mat;
+	transforms.push_back(mat);
 	return id;
+}
+
+unsigned Quads::vertexDataCount() const
+{
+	return vertices.size();
 }
 
 unsigned Quads::indexDataCount() const
 {
 	return indices.size();
+}
+
+unsigned Quads::transformDataCount() const
+{
+	return transforms.size();
 }
 
 unsigned Quads::vertexDataByteCount() const
@@ -41,6 +66,11 @@ unsigned Quads::indexDataByteCount() const
 	return indices.size() * sizeof(Quads::IndexType);
 }
 
+unsigned Quads::transformDataByteCount() const
+{
+	return transforms.size() * sizeof(Quads::MatrixType);
+}
+
 const Quads::VertexType * Quads::vertexData() const
 {
 	return vertices.data();
@@ -50,43 +80,13 @@ const Quads::IndexType * Quads::indexData() const
 {
 	return indices.data();
 }
-/*
-void Quads::sendVertexData() const
+
+const Quads::MatrixType * Quads::transformData() const
 {
-	glBufferData(
-		GL_ARRAY_BUFFER,
-		vertices.size() * sizeof(Quads::VertexType),
-		vertices.data(),
-		GL_STATIC_DRAW);
-}
-void Quads::sendIndexData() const
-{
-	glBufferData(
-		GL_ELEMENT_ARRAY_BUFFER,
-		indices.size() * sizeof(Quads::IndexType),
-		indices.data(),
-		GL_STATIC_DRAW);
+	return transforms.data();
 }
 
-void Quads::positionVertexAttribPointer(unsigned location) const
+Quads::MatrixType & Quads::transform(IndexedQuadID id)
 {
-	glVertexAttribPointer(
-		location,			// location number of vertex array
-		Quads::VertexType::PositionComponents,					// number of components in position vector
-		GL_FLOAT,			// type of vertex component
-		GL_FALSE,			// normalized
-		sizeof(Quads),		// stride
-		(GLvoid*)NULL);
+	return transforms[id.value];
 }
-
-void Quads::textureCoordinateVertexAttribPointer(unsigned location) const
-{
-	glVertexAttribPointer(
-		location,
-		Quads::VertexType::TextureComponents,
-		GL_FLOAT,
-		GL_FALSE,
-		sizeof(Quads::VertexType),
-		(GLvoid*) offsetof(Quads::VertexType, texture));
-}
-*/

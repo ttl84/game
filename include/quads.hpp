@@ -5,6 +5,7 @@
 struct Vertex3 {
 	static const unsigned PositionComponents = 3;
 	static const unsigned TextureComponents = 2;
+	static const unsigned TotalComponents = PositionComponents + TextureComponents;
 	GLfloat position[3];
 	GLfloat texture[2];
 };
@@ -29,9 +30,12 @@ public:
 
 	typedef Vertex3 VertexType;
 
+	typedef glm::mat4 MatrixType;
+
 private:
-	std::vector<Vertex3> vertices;
+	std::vector<VertexType> vertices;
 	std::vector<IndexType> indices;
+	std::vector<MatrixType> transforms;
 public:
 
 	// Appends a real quad to the vertex list.
@@ -43,11 +47,19 @@ public:
 	// returns the quad number.
 	IndexedQuadID addIndex(RealQuadID quadID);
 
+	unsigned vertexDataCount() const;
 	unsigned indexDataCount() const;
+	unsigned transformDataCount() const;
+
 	unsigned vertexDataByteCount() const;
 	unsigned indexDataByteCount() const;
+	unsigned transformDataByteCount() const;
+
 	const VertexType * vertexData() const;
 	const IndexType * indexData() const;
+	const MatrixType * transformData() const;
+
+	MatrixType & transform(IndexedQuadID);
 };
 
 #endif

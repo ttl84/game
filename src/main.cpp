@@ -87,6 +87,9 @@ int run()
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
 
+	GLuint transformVBO;
+	glGenBuffers(1, &transformVBO);
+
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
 
@@ -121,12 +124,35 @@ int run()
 		);
 		glEnableVertexAttribArray(1);
 
+		// indexed rendering
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(
 			GL_ELEMENT_ARRAY_BUFFER,
 			quads.indexDataByteCount(),
 			quads.indexData(),
 			GL_STATIC_DRAW);
+
+		// transform data
+		glBindBuffer(GL_ARRAY_BUFFER, transformVBO);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			quads.transformDataByteCount(),
+			quads.transformData(),
+			GL_STATIC_DRAW
+		);
+		for(unsigned i = 0; i < 4; i++) {
+			glVertexAttribPointer(
+				2 + i,
+				4,
+				GL_FLOAT,
+				GL_FALSE,
+				sizeof(Quads::MatrixType),
+				(GLvoid*) (i * sizeof(glm::vec4))
+			);
+			glEnableVertexAttribArray(2 + i);
+			glVertexAttribDivisor(2 + i, 1);
+		}
+
 
 	glBindVertexArray(0);
 
@@ -226,7 +252,7 @@ int run()
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, quads.indexDataCount(), Quads::IndexTypeID, 0);
+			glDrawElementsInstanced(GL_TRIANGLES, quads.indexDataCount(), Quads::IndexTypeID, 0, quads.transformDataCount());
 		glBindVertexArray(0);
 
 		//Update screen
