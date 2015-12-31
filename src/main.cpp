@@ -77,9 +77,21 @@ int run()
 
 	GLuint EBO;
 	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
+		quads.indexDataByteCount(),
+		quads.indexData(),
+		GL_STATIC_DRAW);
 
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		quads.vertexDataByteCount(),
+		quads.vertexData(),
+		GL_STATIC_DRAW);
 
 	GLuint transformVBO;
 	glGenBuffers(1, &transformVBO);
@@ -88,15 +100,9 @@ int run()
 	glGenVertexArrays(1, &VAO);
 
 	glBindVertexArray(VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(
-			GL_ARRAY_BUFFER,
-			quads.vertexDataByteCount(),
-			quads.vertexData(),
-			GL_STATIC_DRAW);
-
 		// vertex coordinates
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		// before using glVertexAttribPointer, the correct buffer must be bound first
 		glVertexAttribPointer(
 			0,
 			Quads::VertexType::PositionComponents,
@@ -118,22 +124,10 @@ int run()
 		);
 		glEnableVertexAttribArray(1);
 
-		// indexed rendering
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(
-			GL_ELEMENT_ARRAY_BUFFER,
-			quads.indexDataByteCount(),
-			quads.indexData(),
-			GL_STATIC_DRAW);
+
 
 		// transform data
 		glBindBuffer(GL_ARRAY_BUFFER, transformVBO);
-		glBufferData(
-			GL_ARRAY_BUFFER,
-			quads.transformDataByteCount(),
-			quads.transformData(),
-			GL_STATIC_DRAW
-		);
 		for(unsigned i = 0; i < 4; i++) {
 			glVertexAttribPointer(
 				2 + i,
@@ -147,7 +141,8 @@ int run()
 			glVertexAttribDivisor(2 + i, 1);
 		}
 
-
+		// indexed rendering
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBindVertexArray(0);
 
 	GLuint texture;
