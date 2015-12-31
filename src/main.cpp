@@ -70,16 +70,10 @@ int run()
 		Vertex3{{-0.5, -0.5, 0}, {0, 0}},
 		Vertex3{{-0.5,  0.5, 0}, {0, 1}}
 	};
-	Quad quad2 = {
-		Vertex3{{0.7,  0.5, 0}, {1, 1}},
-		Vertex3{{0.7, -0.5, 0}, {1, 0}},
-		Vertex3{{-0.1, -0.5, 0}, {0, 0}},
-		Vertex3{{-0.1,  0.5, 0}, {0, 1}}
-	};
+
 	RealQuadID id1 = quads.addVertex(quad1);
-	RealQuadID id2 = quads.addVertex(quad2);
-	quads.addIndex(id1);
-	quads.addIndex(id2);
+	IndexedQuadID iid1 = quads.addIndex(id1);
+	IndexedQuadID iid2 = quads.addIndex(id1);
 
 	GLuint EBO;
 	glGenBuffers(1, &EBO);
@@ -241,17 +235,32 @@ int run()
 		}
 
 		glm::mat4 trans;
-		trans = glm::translate(trans, glm::vec3(x, y, 0));
-		trans = glm::rotate(trans, angle, glm::vec3(0, 0, 1.0));
+		//trans = glm::translate(trans, glm::vec3(x, y, 0));
+		//trans = glm::rotate(trans, angle, glm::vec3(0, 0, 1.0));
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+		glm::mat4 & trans1 = quads.transform(iid1);
+		trans1 = glm::mat4();
+		trans1 = glm::translate(trans1, glm::vec3(x, y, 0));
+		trans1 = glm::rotate(trans1, angle, glm::vec3(0, 0, 1.0));
+
+		// reupload transform data
+		glBindBuffer(GL_ARRAY_BUFFER, transformVBO);
+		glBufferData(
+			GL_ARRAY_BUFFER,
+			quads.transformDataByteCount(),
+			quads.transformData(),
+			GL_STATIC_DRAW
+		);
+
+
 		// render
-
 		glClear(GL_COLOR_BUFFER_BIT);
-
-
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
+			// same as glDrawElements, but with an extra parameter stating
+			// how many instances to draw
 			glDrawElementsInstanced(GL_TRIANGLES, quads.indexDataCount(), Quads::IndexTypeID, 0, quads.transformDataCount());
 		glBindVertexArray(0);
 
