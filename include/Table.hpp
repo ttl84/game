@@ -24,13 +24,13 @@ public:
 	bool isEmpty() const;
 
 	// returns the number of rows
-    int rows() const;
+    unsigned rows() const;
 
 	// returns the number of columns
-    int columns() const;
+    unsigned columns() const;
 
 	// returns the value at row r and column c
-    std::string cell(int r, int c) const;
+    std::string cell(unsigned r, unsigned c) const;
 
 private:
     std::vector< std::vector<std::string> > table;

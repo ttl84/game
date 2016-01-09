@@ -39,9 +39,9 @@ void Table::write(string path) const
 
 void Table::write(ostream & outFile) const
 {
-	for(int a = 0; a < rows(); a ++){
+	for(unsigned a = 0; a < rows(); a ++){
 		outFile << table[a][0];
-		for(int b = 1; b < columns(); b ++){
+		for(unsigned b = 1; b < columns(); b ++){
 			outFile  << "|" << table[a][b];
 		}
 		outFile << "\n";
@@ -54,12 +54,12 @@ bool Table::isEmpty() const
 	return rows() * columns() == 0;
 }
 
-int Table::rows() const
+unsigned Table::rows() const
 {
 	return table.size();
 }
 
-int Table::columns() const
+unsigned Table::columns() const
 {
 	if(rows() == 0) {
 		return 0;
@@ -68,7 +68,7 @@ int Table::columns() const
 	}
 }
 
-string Table::cell(int r, int c) const
+string Table::cell(unsigned r, unsigned c) const
 {
 	return table[r][c];
 }
