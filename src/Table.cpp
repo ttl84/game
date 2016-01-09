@@ -58,6 +58,15 @@ bool Table::isEmpty() const
 	return rows() * columns() == 0;
 }
 
+bool Table::isUneven() const
+{
+	for(unsigned i = 0; i < rows(); i++) {
+		if(columns() != table[i].size()) {
+			return true;
+		}
+	}
+	return false;
+}
 unsigned Table::rows() const
 {
 	return table.size();
@@ -74,7 +83,11 @@ unsigned Table::columns() const
 
 string Table::cell(unsigned r, unsigned c) const
 {
-	return table[r][c];
+	if(r >= rows() || c >= columns()) {
+		throw OutOfBounds(r, c);
+	} else {
+		return table[r][c];
+	}
 }
 
 
@@ -88,4 +101,10 @@ Table::FileNotFound::FileNotFound(char const * p)
 char const * Table::FileNotFound::getPath() const
 {
 	return path.c_str();
+}
+
+Table::OutOfBounds::OutOfBounds(unsigned r, unsigned c)
+: row(c), column(c)
+{
+
 }
