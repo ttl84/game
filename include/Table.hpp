@@ -9,14 +9,8 @@ class Table{
 
 public:
 
-	// read from a file located at path
-    void read(std::string path);
-
 	// read from a stream object
 	void read(std::istream & is);
-
-	// write to a file located at path
-    void write(std::string path) const;
 
 	// write to a stream object
 	void write(std::ostream & os) const;
@@ -36,14 +30,6 @@ public:
 	// returns reference to value at row r and column c
     std::string & cell(unsigned r, unsigned c);
 
-    // Exceptions
-    // Can't open the file
-    class FileNotFound {
-		std::string path;
-	public:
-		FileNotFound(char const * p);
-		char const *getPath() const;
-	};
 
 	// The requested cell location is out of bounds
 	class OutOfBounds {
@@ -59,6 +45,7 @@ private:
 
 };
 
+// helpers
 template<class T>
 bool readFormat(Table & t, unsigned row, unsigned col, T & val)
 {
@@ -77,4 +64,5 @@ bool writeFormat(Table & t, unsigned row, unsigned col, const T& val)
 		return false;
 	}
 }
+
 #endif
