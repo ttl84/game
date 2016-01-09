@@ -7,11 +7,15 @@
 
 using namespace std;
 
+
+
 void Table::read(string path)
 {
 	std::ifstream inFile(path);
 	if(inFile.is_open()){
 		this->read(inFile);
+	} else {
+		throw FileNotFound(path.c_str());
 	}
 }
 
@@ -71,4 +75,17 @@ unsigned Table::columns() const
 string Table::cell(unsigned r, unsigned c) const
 {
 	return table[r][c];
+}
+
+
+// Exceptions
+Table::FileNotFound::FileNotFound(char const * p)
+:path(p)
+{
+
+}
+
+char const * Table::FileNotFound::getPath() const
+{
+	return path.c_str();
 }

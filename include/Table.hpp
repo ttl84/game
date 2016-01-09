@@ -32,6 +32,14 @@ public:
 	// returns the value at row r and column c
     std::string cell(unsigned r, unsigned c) const;
 
+    // Exceptions
+    class FileNotFound {
+		std::string path;
+	public:
+		FileNotFound(char const * p);
+		char const *getPath() const;
+	};
+
 private:
     std::vector< std::vector<std::string> > table;
 
