@@ -1,6 +1,7 @@
 #ifndef TABLE_HPP
 #define TABLE_HPP
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -57,4 +58,23 @@ private:
     std::vector< std::vector<std::string> > table;
 
 };
+
+template<class T>
+bool readFormat(Table & t, unsigned row, unsigned col, T & val)
+{
+	std::istringstream iss(t.cell(row, col));
+	iss >> val;
+	return iss;
+}
+
+template<class T>
+bool writeFormat(Table & t, unsigned row, unsigned col, const T& val)
+{
+	std::ostringstream oss;
+	if(oss << val) {
+		t.cell(row, col) = oss.str();
+	} else {
+		return false;
+	}
+}
 #endif
