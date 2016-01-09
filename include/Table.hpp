@@ -18,9 +18,6 @@ public:
 	// returns true if file has no rows or no columns
 	bool isEmpty() const;
 
-	// returns true if not all rows have the same length
-	bool isUneven() const;
-
 	// returns the number of rows
     unsigned rows() const;
 
@@ -34,10 +31,19 @@ public:
 	// The requested cell location is out of bounds
 	class OutOfBounds {
 	public:
-		unsigned const row;
-		unsigned const column;
+		unsigned row;
+		unsigned column;
 	
 		OutOfBounds(unsigned r, unsigned c);
+	};
+
+	// The table has unequal row lengths
+	class UnevenRow {
+	public:
+		UnevenRow(unsigned row, unsigned expected, unsigned got);
+		unsigned row;
+		unsigned expectedColumns;
+		unsigned gotColumns;
 	};
 
 private:

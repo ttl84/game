@@ -18,6 +18,13 @@ void Table::read(istream & inFile)
 		}
 		table.push_back(row_vector);
 	}
+
+	// check for uneven rows
+	for(unsigned i = 0; i < rows(); i++) {
+		if(columns() != table[i].size()) {
+			throw UnevenRow(i, columns(), table[i].size());
+		}
+	}
 }
 
 void Table::write(ostream & outFile) const
@@ -37,15 +44,6 @@ bool Table::isEmpty() const
 	return rows() * columns() == 0;
 }
 
-bool Table::isUneven() const
-{
-	for(unsigned i = 0; i < rows(); i++) {
-		if(columns() != table[i].size()) {
-			return true;
-		}
-	}
-	return false;
-}
 unsigned Table::rows() const
 {
 	return table.size();
@@ -71,8 +69,15 @@ string & Table::cell(unsigned r, unsigned c)
 
 
 // Exceptions
-Table::OutOfBounds::OutOfBounds(unsigned r, unsigned c)
-: row(c), column(c)
+Table::OutOfBounds::OutOfBounds(unsigned row, unsigned column)
 {
+	this->row = row;
+	this->column = column;
+}
 
+Table::UnevenRow::UnevenRow(unsigned row, unsigned expectedColumns, unsigned gotColumns)
+{
+	this->row = row;
+	this->expectedColumns = expectedColumns;
+	this->gotColumns = gotColumns;
 }
