@@ -57,3 +57,20 @@ bool Atlas::getComponent(int index, AtlasComponent & dst) const
 		return false;
 	}
 }
+
+unsigned bottom(AtlasComponent const & a)
+{
+	return a.y;
+}
+unsigned top(AtlasComponent const & a)
+{
+	return a.y + a.height;
+}
+unsigned left(AtlasComponent const & a)
+{
+	return a.x;
+}
+unsigned right(AtlasComponent const & a)
+{
+	return a.x + a.width;
+}

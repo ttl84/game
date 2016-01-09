@@ -7,6 +7,11 @@ struct AtlasComponent {
 	unsigned x, y; // origin (bottom left)
 	unsigned width, height; //dimensions
 };
+unsigned bottom(AtlasComponent const & a);
+unsigned top(AtlasComponent const & a);
+unsigned left(AtlasComponent const & a);
+unsigned right(AtlasComponent const & a);
+
 
 class Atlas{
 	unsigned maxDimension;
