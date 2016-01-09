@@ -32,8 +32,8 @@ public:
 	// returns the number of columns
     unsigned columns() const;
 
-	// returns the value at row r and column c
-    std::string cell(unsigned r, unsigned c) const;
+	// returns reference to value at row r and column c
+    std::string & cell(unsigned r, unsigned c);
 
     // Exceptions
     // Can't open the file

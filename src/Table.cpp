@@ -81,7 +81,7 @@ unsigned Table::columns() const
 	}
 }
 
-string Table::cell(unsigned r, unsigned c) const
+string & Table::cell(unsigned r, unsigned c)
 {
 	if(r >= rows() || c >= columns()) {
 		throw OutOfBounds(r, c);
