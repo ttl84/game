@@ -11,26 +11,27 @@ file(GLOB SOURCES "src/*.cpp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors -Wall -static-libstdc++")
 
 # set libraries to link
-set(LIBS SDL2 SDL2_image)
-if(MINGW)
-	message(STATUS "MinGW is detected.")
-
-	message(STATUS "Setting up link flags for sdl.")
-	set(LIBS mingw32 SDL2main ${LIBS})
-
-endif(MINGW)
-
+message(STATUS "Setting up library names for glew, glu and opengl.")
 if(WIN32 OR MSYS)
 	message(STATUS "Windows/MSYS is detected.")
-
-	message(STATUS "Setting up link flags for opengl.")
-	set(LIBS ${LIBS} glew32 glu32 opengl32)
+	set(LIBGLEW glew32)
+	set(LIBGLU glu32)
+	set(LIBOPENGL opengl32)
 elseif(UNIX)
 	message(STATUS "UNIX is detected.")
-
-	message(STATUS "Setting up link flags for opengl.")
-	set(LIBS ${LIBS} GLEW GLU GL)
+	set(LIBGLEW GLEW)
+	set(LIBGLU GLU)
+	set(LIBOPENGL GL)
 endif(WIN32 OR MSYS)
+
+set(LIBS SDL2 SDL2_image ${LIBGLEW} ${LIBGLU} ${LIBOPENGL})
+
+if(MINGW)
+	message(STATUS "MinGW is detected.")
+	message(STATUS "Adding extra libraries to link.")
+	set(LIBS mingw32 SDL2main ${LIBS})
+endif(MINGW)
+
 
 message(STATUS "Libraries to link are: ${LIBS}")
 
