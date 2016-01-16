@@ -1,4 +1,4 @@
-#include "Rectangle.h"
+#include "Rectangle.hpp"
 
 //Construct a rectangle
 Rectangle::Rectangle(float t, float b, float l, float r){

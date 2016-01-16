@@ -1,3 +1,6 @@
+#ifndef RECTANGLE_HPP
+#define RECTANGLE_HPP
+
 class Rectangle{
 
     public:
@@ -17,3 +20,4 @@ class Rectangle{
 
 bool Intersect(Rectangle rect1, Rectangle rect2);
 bool Contains(Rectangle rect, float x, float y);
+#endif
