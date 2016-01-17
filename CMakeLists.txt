@@ -5,7 +5,16 @@ project(game)
 include_directories(./include)
 
 # get file list
-file(GLOB SOURCES "src/*.cpp")
+set(SOURCES
+	src/atlas.cpp
+	src/file_util.cpp
+	src/image.cpp
+	src/main.cpp
+	src/opengl_util.cpp
+	src/quads.cpp
+	src/Rectangle.cpp
+	src/sdlwrapper.cpp
+	src/Table.cpp)
 
 # set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic-errors -Wall -static-libstdc++")
