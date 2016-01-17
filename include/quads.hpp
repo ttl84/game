@@ -36,7 +36,13 @@ private:
 	std::vector<VertexType> vertices;
 	std::vector<IndexType> indices;
 	std::vector<MatrixType> transforms;
+
+	GLuint vertexAndTextureBuf;
+	GLuint transformBuf;
+	GLuint indexBuf;
 public:
+
+	Quads();
 
 	// Appends a real quad to the vertex list.
 	// Returns Quad ID.
@@ -47,6 +53,7 @@ public:
 	// returns the quad number.
 	IndexedQuadID addIndex(RealQuadID quadID);
 
+private:
 	unsigned vertexDataCount() const;
 	unsigned indexDataCount() const;
 	unsigned transformDataCount() const;
@@ -58,21 +65,24 @@ public:
 	const VertexType * vertexData() const;
 	const IndexType * indexData() const;
 	const MatrixType * transformData() const;
+	
+public:
 
 	// Bind and upload vertex/index/matrix data
-	void uploadVertices(GLuint buf) const;
-	void uploadIndices(GLuint buf) const;
-	void uploadTransforms(GLuint buf) const;
+	void uploadVertices() const;
+	void uploadIndices() const;
+	void uploadTransforms() const;
 
 	// Sets up vbo data interpretation.
-	void setupVertexFormat(GLuint buf, GLuint location) const;
-	void setupTextureCoordinateFormat(GLuint buf, GLuint location) const;
-	void setupTransformFormat(GLuint buf, GLuint location) const;
+	void setupVertexFormat(GLuint location) const;
+	void setupTextureCoordinateFormat(GLuint location) const;
+	void setupTransformFormat(GLuint location) const;
 
-
+	// Access a transformation matrix.
 	MatrixType & transform(IndexedQuadID);
 
-	void draw(GLuint ebo) const;
+	// Perform an indexed, instanced draw.
+	void draw() const;
 };
 
 #endif

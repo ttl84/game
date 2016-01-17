@@ -75,24 +75,17 @@ int run()
 	IndexedQuadID iid1 = quads.addIndex(id1);
 	IndexedQuadID iid2 = quads.addIndex(id1);
 
-	GLuint EBO;
-	glGenBuffers(1, &EBO);
-	quads.uploadIndices(EBO);
 
-	GLuint VBO;
-	glGenBuffers(1, &VBO);
-	quads.uploadVertices(VBO);
-
-	GLuint transformVBO;
-	glGenBuffers(1, &transformVBO);
+	quads.uploadIndices();
+	quads.uploadVertices();
 
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
 
 	glBindVertexArray(VAO);
-		quads.setupVertexFormat(VBO, 0);
-		quads.setupTextureCoordinateFormat(VBO, 1);
-		quads.setupTransformFormat(transformVBO, 2);
+		quads.setupVertexFormat(0);
+		quads.setupTextureCoordinateFormat(1);
+		quads.setupTransformFormat(2);
 	glBindVertexArray(0);
 
 	GLuint texture;
@@ -190,7 +183,7 @@ int run()
 		trans1 = glm::rotate(trans1, angle, glm::vec3(0, 0, 1.0));
 
 		// reupload transform data
-		quads.uploadTransforms(transformVBO);
+		quads.uploadTransforms();
 
 
 		// render
@@ -200,7 +193,7 @@ int run()
 		glBindVertexArray(VAO);
 			// same as glDrawElements, but with an extra parameter stating
 			// how many instances to draw
-			quads.draw(EBO);
+			quads.draw();
 		glBindVertexArray(0);
 
 		//Update screen
