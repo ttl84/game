@@ -10,15 +10,15 @@ Quads::Quads()
 
 RealQuadID vertexNumberToRealQuadID(unsigned i)
 {
-	return RealQuadID{i / 4};
+	return RealQuadID{i / Quad::QUAD_COMPONENTS};
 }
 unsigned realQuadIDToVertexNumber(RealQuadID id)
 {
-	return id.value * 4;
+	return id.value * Quad::QUAD_COMPONENTS;
 }
 IndexedQuadID indexNumberToIndexedQuadID(unsigned i)
 {
-	return IndexedQuadID{i / 6};
+	return IndexedQuadID{i / Quads::INDEX_QUAD_COMPONENTS};
 }
 
 RealQuadID Quads::addVertex(Quad q)

@@ -11,7 +11,8 @@ struct Vertex3 {
 };
 
 struct Quad {
-	Vertex3 vertex[4];
+	static const unsigned QUAD_COMPONENTS = 4;
+	Vertex3 vertex[QUAD_COMPONENTS];
 };
 struct RealQuadID{
 	unsigned value;
@@ -31,6 +32,8 @@ public:
 	typedef Vertex3 VertexType;
 
 	typedef glm::mat4 MatrixType;
+
+	static const unsigned INDEX_QUAD_COMPONENTS = 6;
 
 private:
 	std::vector<VertexType> vertices;
