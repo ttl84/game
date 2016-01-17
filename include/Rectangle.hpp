@@ -3,18 +3,18 @@
 
 class Rectangle{
 
-    public:
-        Rectangle(float t, float b, float l, float r);
-        float getTop();
-        float getBottom();
-        float getLeft();
-        float getRight();
+	public:
+		Rectangle(float t, float b, float l, float r);
+		float getTop();
+		float getBottom();
+		float getLeft();
+		float getRight();
 
-    private:
-        float top;
-        float bottom;
-        float left;
-        float right;
+	private:
+		float top;
+		float bottom;
+		float left;
+		float right;
 
 };
 

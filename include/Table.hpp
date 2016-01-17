@@ -19,13 +19,13 @@ public:
 	bool isEmpty() const;
 
 	// returns the number of rows
-    unsigned rows() const;
+	unsigned rows() const;
 
 	// returns the number of columns
-    unsigned columns() const;
+	unsigned columns() const;
 
 	// returns reference to value at row r and column c
-    std::string & cell(unsigned r, unsigned c);
+	std::string & cell(unsigned r, unsigned c);
 
 
 	// The requested cell location is out of bounds
@@ -33,7 +33,7 @@ public:
 	public:
 		unsigned row;
 		unsigned column;
-	
+
 		OutOfBounds(unsigned r, unsigned c);
 	};
 
@@ -47,7 +47,7 @@ public:
 	};
 
 private:
-    std::vector< std::vector<std::string> > table;
+	std::vector< std::vector<std::string> > table;
 
 };
 

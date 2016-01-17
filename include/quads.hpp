@@ -65,7 +65,7 @@ private:
 	const VertexType * vertexData() const;
 	const IndexType * indexData() const;
 	const MatrixType * transformData() const;
-	
+
 public:
 
 	// Bind and upload vertex/index/matrix data
