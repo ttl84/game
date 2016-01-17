@@ -191,8 +191,6 @@ int run()
 
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
-			// same as glDrawElements, but with an extra parameter stating
-			// how many instances to draw
 			quads.draw();
 		glBindVertexArray(0);
 
