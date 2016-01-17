@@ -117,8 +117,9 @@ void Quads::uploadTransforms(GLuint mbo) const
 	);
 }
 
-void Quads::setupVertexFormat(GLuint location) const
+void Quads::setupVertexFormat(GLuint buf, GLuint location) const
 {
+	glBindBuffer(GL_ARRAY_BUFFER, buf);
 	glVertexAttribPointer(
 		location,
 		Quads::VertexType::PositionComponents,
@@ -130,8 +131,9 @@ void Quads::setupVertexFormat(GLuint location) const
 	glEnableVertexAttribArray(location);
 }
 
-void Quads::setupTextureCoordinateFormat(GLuint location) const
+void Quads::setupTextureCoordinateFormat(GLuint buf, GLuint location) const
 {
+	glBindBuffer(GL_ARRAY_BUFFER, buf);
 	glVertexAttribPointer(
 			location,
 			Quads::VertexType::TextureComponents,
@@ -140,12 +142,12 @@ void Quads::setupTextureCoordinateFormat(GLuint location) const
 			sizeof(Quads::VertexType),
 			(GLvoid*) offsetof(Quads::VertexType, texture)
 		);
-		glEnableVertexAttribArray(location);
+	glEnableVertexAttribArray(location);
 }
 
-void Quads::setupTransformFormat(GLuint location) const
+void Quads::setupTransformFormat(GLuint buf, GLuint location) const
 {
-
+	glBindBuffer(GL_ARRAY_BUFFER, buf);
 	for(unsigned i = 0; i < 4; i++) {
 		glVertexAttribPointer(
 			location + i,
@@ -163,4 +165,16 @@ void Quads::setupTransformFormat(GLuint location) const
 Quads::MatrixType & Quads::transform(IndexedQuadID id)
 {
 	return transforms[id.value];
+}
+
+void Quads::draw(GLuint ebo) const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glDrawElementsInstanced(
+		GL_TRIANGLES,
+		indexDataCount(),
+		Quads::IndexTypeID,
+		0,
+		transformDataCount()
+	);
 }

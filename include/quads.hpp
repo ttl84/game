@@ -60,17 +60,19 @@ public:
 	const MatrixType * transformData() const;
 
 	// Bind and upload vertex/index/matrix data
-	void uploadVertices(GLuint vbo) const;
-	void uploadIndices(GLuint ebo) const;
-	void uploadTransforms(GLuint mbo) const;
+	void uploadVertices(GLuint buf) const;
+	void uploadIndices(GLuint buf) const;
+	void uploadTransforms(GLuint buf) const;
 
 	// Sets up vbo data interpretation.
-	void setupVertexFormat(GLuint location) const;
-	void setupTextureCoordinateFormat(GLuint location) const;
-	void setupTransformFormat(GLuint location) const;
+	void setupVertexFormat(GLuint buf, GLuint location) const;
+	void setupTextureCoordinateFormat(GLuint buf, GLuint location) const;
+	void setupTransformFormat(GLuint buf, GLuint location) const;
 
 
 	MatrixType & transform(IndexedQuadID);
+
+	void draw(GLuint ebo) const;
 };
 
 #endif

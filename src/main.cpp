@@ -90,14 +90,9 @@ int run()
 	glGenVertexArrays(1, &VAO);
 
 	glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		quads.setupVertexFormat(0);
-		quads.setupTextureCoordinateFormat(1);
-
-		glBindBuffer(GL_ARRAY_BUFFER, transformVBO);
-		quads.setupTransformFormat(2);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		quads.setupVertexFormat(VBO, 0);
+		quads.setupTextureCoordinateFormat(VBO, 1);
+		quads.setupTransformFormat(transformVBO, 2);
 	glBindVertexArray(0);
 
 	GLuint texture;
@@ -205,7 +200,7 @@ int run()
 		glBindVertexArray(VAO);
 			// same as glDrawElements, but with an extra parameter stating
 			// how many instances to draw
-			glDrawElementsInstanced(GL_TRIANGLES, quads.indexDataCount(), Quads::IndexTypeID, 0, quads.transformDataCount());
+			quads.draw(EBO);
 		glBindVertexArray(0);
 
 		//Update screen
