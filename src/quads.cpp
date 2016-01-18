@@ -46,6 +46,7 @@ IndexedQuadID Quads::addIndex(RealQuadID realID)
 				std::end(elements));
 	Quads::MatrixType mat;
 	transforms.push_back(mat);
+	assert(id.value == transforms.size() - 1);
 	return id;
 }
 
