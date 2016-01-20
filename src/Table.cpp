@@ -4,10 +4,16 @@
 #include <vector>
 #include <sstream>
 
-using namespace std;
+using std::vector;
+using std::string;
+using std::istream;
+using std::ostream;
+using std::istringstream;
 
 void Table::read(istream & inFile)
 {
+	// Create temporary table for reading
+	vector<vector<string>> table;
 	string line;
 	while(getline(inFile, line, '\n')){
 		vector<string> row_vector;
@@ -19,12 +25,15 @@ void Table::read(istream & inFile)
 		table.push_back(row_vector);
 	}
 
-	// check for uneven rows
+	// check for uneven rows, and throw if there are any
 	for(unsigned i = 0; i < rows(); i++) {
 		if(columns() != table[i].size()) {
-			throw UnevenRow(i, columns(), table[i].size());
+			throw UnevenRow (i, columns(), table[i].size());
 		}
 	}
+
+	// no errors, replace existing table with the new one
+	this->table = std::move(table);
 }
 
 void Table::write(ostream & outFile) const
