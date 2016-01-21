@@ -10,7 +10,7 @@ struct Vertex3 {
 	GLfloat texture[2];
 };
 
-struct Quad {
+struct TexturedQuad {
 	static const unsigned QUAD_COMPONENTS = 4;
 	Vertex3 vertex[QUAD_COMPONENTS];
 };
@@ -49,7 +49,7 @@ public:
 
 	// Appends a real quad to the vertex list.
 	// Returns Quad ID.
-	RealQuadID addVertex(Quad);
+	RealQuadID addVertex(TexturedQuad);
 
 	// Appends an indexed quad to the index list.
 	// The input quadID must be the ID of an existing concrete quad in the list.

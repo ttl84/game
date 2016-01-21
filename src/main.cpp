@@ -3,6 +3,7 @@
 
 #include "aabb.hpp"
 #include "quads.hpp"
+#include "atlas.hpp"
 
 #include <iostream>
 #include <string>
@@ -64,7 +65,7 @@ int run()
 
 	// vertex data
 	Quads quads;
-	Quad quad1{
+	TexturedQuad quad1{
 		Vertex3{{0.5,  0.5, 0}, {1, 1}},
 		Vertex3{{0.5, -0.5, 0}, {1, 0}},
 		Vertex3{{-0.5, -0.5, 0}, {0, 0}},
@@ -79,31 +80,30 @@ int run()
 	quads.uploadIndices();
 	quads.uploadVertices();
 
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
-
-	glBindVertexArray(VAO);
-		quads.setupVertexFormat(0);
-		quads.setupTextureCoordinateFormat(1);
-		quads.setupTransformFormat(2);
-	glBindVertexArray(0);
-
 	GLuint texture;
 	glGenTextures(1, &texture);
+	Image image = imgLoader.loadRGBA("../img/drawing.png");
+	flipVertically(image);
 	glBindTexture(GL_TEXTURE_2D, texture);
-		Image image = imgLoader.loadRGBA("../img/drawing.png");
-		flipVertically(image);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
 			image.getWidth(), image.getHeight(),
 			0, GL_RGBA, GL_UNSIGNED_BYTE, image.ptr(0, 0, 0));
 		glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glBindVertexArray(VAO);
+		glUseProgram(program.id);
 
-	glUseProgram(program.id);
+		quads.setupVertexFormat(0);
+		quads.setupTextureCoordinateFormat(1);
+		quads.setupTransformFormat(2);
 
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+	glBindVertexArray(0);
 
 
 	GLuint transformLoc = glGetUniformLocation(program.id, "transform");
@@ -187,9 +187,9 @@ int run()
 
 
 		// render
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
 			quads.draw();
 		glBindVertexArray(0);
