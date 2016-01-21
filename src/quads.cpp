@@ -131,7 +131,7 @@ void Quads::setupVertexFormat(GLuint location) const
 	glBindBuffer(GL_ARRAY_BUFFER, vertexAndTextureBuf);
 	glVertexAttribPointer(
 				location,
-				Quads::VertexType::PositionComponents,
+				Quads::VertexType::POSITION_COMPONENTS,
 				GL_FLOAT,
 				GL_FALSE,
 				sizeof(Quads::VertexType),
@@ -145,7 +145,7 @@ void Quads::setupTextureCoordinateFormat(GLuint location) const
 	glBindBuffer(GL_ARRAY_BUFFER, vertexAndTextureBuf);
 	glVertexAttribPointer(
 				location,
-				Quads::VertexType::TextureComponents,
+				Quads::VertexType::TEXTURE_COORDINATE_COMPONENTS,
 				GL_FLOAT,
 				GL_FALSE,
 				sizeof(Quads::VertexType),

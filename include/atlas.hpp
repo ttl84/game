@@ -1,6 +1,7 @@
 #ifndef ATLAS_HPP
 #define ATLAS_HPP
 #include "image.hpp"
+#include "texturedquad.hpp"
 
 // location and dimension of a texture
 struct AtlasComponent {
@@ -22,7 +23,7 @@ public:
 	Atlas(unsigned maxDimension);
 	int add(const Image & img);
 
-	bool getComponent(int index, AtlasComponent &) const;
+	bool getTexturedQuad(int index, TexturedQuad &) const;
 
 	const Image & getImage() const;
 };

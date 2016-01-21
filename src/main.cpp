@@ -67,7 +67,7 @@ int run()
 	Atlas atlas(GL_MAX_TEXTURE_SIZE);
 	Image image = imgLoader.loadRGBA("../img/drawing.png");
 	flipVertically(image);
-	atlas.add(image);
+	int atlasComp1 = atlas.add(image);
 
 	gl::Texture2D texture(
 				atlas.getImage().getWidth(),
@@ -76,12 +76,10 @@ int run()
 
 	// vertex data
 	Quads quads;
-	TexturedQuad quad1{
-		Vertex3{{0.5,  0.5, 0}, {1, 1}},
-		Vertex3{{0.5, -0.5, 0}, {1, 0}},
-		Vertex3{{-0.5, -0.5, 0}, {0, 0}},
-		Vertex3{{-0.5,  0.5, 0}, {0, 1}}
-	};
+
+	TexturedQuad quad1;
+	bool success = atlas.getTexturedQuad(atlasComp1, quad1);
+	assert(success);
 
 	RealQuadID id1 = quads.addVertex(quad1);
 	IndexedQuadID iid1 = quads.addIndex(id1);

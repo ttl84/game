@@ -1,19 +1,9 @@
 #ifndef QUADS_HPP
 #define QUADS_HPP
 #include "opengl_util.hpp"
+#include "texturedquad.hpp"
 #include <vector>
-struct Vertex3 {
-	static const unsigned PositionComponents = 3;
-	static const unsigned TextureComponents = 2;
-	static const unsigned TotalComponents = PositionComponents + TextureComponents;
-	GLfloat position[3];
-	GLfloat texture[2];
-};
 
-struct TexturedQuad {
-	static const unsigned QUAD_COMPONENTS = 4;
-	Vertex3 vertex[QUAD_COMPONENTS];
-};
 struct RealQuadID{
 	unsigned value;
 };
