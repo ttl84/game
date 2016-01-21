@@ -63,6 +63,17 @@ int run()
 		{GL_FRAGMENT_SHADER, "../shaders/fragment.glsl"}
 	});
 
+	// build atlas
+	Atlas atlas(GL_MAX_TEXTURE_SIZE);
+	Image image = imgLoader.loadRGBA("../img/drawing.png");
+	flipVertically(image);
+	atlas.add(image);
+
+	gl::Texture2D texture(
+				atlas.getImage().getWidth(),
+				atlas.getImage().getHeight(),
+				atlas.getImage().ptr(0, 0, 0));
+
 	// vertex data
 	Quads quads;
 	TexturedQuad quad1{
@@ -81,10 +92,9 @@ int run()
 	quads.uploadVertices();
 
 
-	Image image = imgLoader.loadRGBA("../img/drawing.png");
-	flipVertically(image);
 
-	gl::Texture2D texture(image.getWidth(), image.getHeight(), image.ptr(0, 0, 0));
+
+
 
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);

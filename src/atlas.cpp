@@ -58,6 +58,11 @@ bool Atlas::getComponent(int index, AtlasComponent & dst) const
 	}
 }
 
+const Image & Atlas::getImage() const
+{
+	return atlas;
+}
+
 unsigned bottom(AtlasComponent const & a)
 {
 	return a.y;

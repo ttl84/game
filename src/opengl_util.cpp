@@ -183,7 +183,7 @@ void Program::use() const
 	glUseProgram(id);
 }
 
-Texture2D::Texture2D(unsigned width, unsigned height, uint8_t * const data)
+Texture2D::Texture2D(unsigned width, unsigned height, uint8_t const * data)
 {
 	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);

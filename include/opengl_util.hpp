@@ -62,7 +62,7 @@ public:
 	// Create a texture with data.
 	// The data must be arranged like so:
 	// RGBARGBARGBA...
-	Texture2D(unsigned width, unsigned height, uint8_t * const data);
+	Texture2D(unsigned width, unsigned height, uint8_t const * data);
 	~Texture2D();
 	void bind() const;
 	void unbind() const;

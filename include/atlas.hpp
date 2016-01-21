@@ -23,5 +23,7 @@ public:
 	int add(const Image & img);
 
 	bool getComponent(int index, AtlasComponent &) const;
+
+	const Image & getImage() const;
 };
 #endif
