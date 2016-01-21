@@ -178,4 +178,35 @@ Program::~Program()
 		id = 0;
 	}
 }
+
+Texture2D::Texture2D(unsigned width, unsigned height, uint8_t * const data)
+{
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RGBA,
+				width,
+				height,
+				0,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+Texture2D::~Texture2D()
+{
+	glDeleteTextures(1, &id);
+}
+
+void Texture2D::bind()const
+{
+	glBindTexture(GL_TEXTURE_2D, id);
+}
+void Texture2D::unbind() const
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 } // end namespace gl

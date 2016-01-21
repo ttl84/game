@@ -51,5 +51,19 @@ public:
 	Program(const Program& other) = delete;
 	Program & operator=(const Program& other) = delete;
 };
+
+// Wrapper for 2D RGBA unsigned byte textures.
+class Texture2D {
+	GLuint id;
+public:
+
+	// Create a texture with data.
+	// The data must be arranged like so:
+	// RGBARGBARGBA...
+	Texture2D(unsigned width, unsigned height, uint8_t * const data);
+	~Texture2D();
+	void bind() const;
+	void unbind() const;
+};
 } // end namespace gl
 #endif

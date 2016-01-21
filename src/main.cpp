@@ -80,16 +80,11 @@ int run()
 	quads.uploadIndices();
 	quads.uploadVertices();
 
-	GLuint texture;
-	glGenTextures(1, &texture);
+
 	Image image = imgLoader.loadRGBA("../img/drawing.png");
 	flipVertically(image);
-	glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-			image.getWidth(), image.getHeight(),
-			0, GL_RGBA, GL_UNSIGNED_BYTE, image.ptr(0, 0, 0));
-		glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
+
+	gl::Texture2D texture(image.getWidth(), image.getHeight(), image.ptr(0, 0, 0));
 
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
@@ -101,7 +96,7 @@ int run()
 		quads.setupTextureCoordinateFormat(1);
 		quads.setupTransformFormat(2);
 
-		glBindTexture(GL_TEXTURE_2D, texture);
+		texture.bind();
 
 	glBindVertexArray(0);
 
