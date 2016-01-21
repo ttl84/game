@@ -178,6 +178,10 @@ Program::~Program()
 		id = 0;
 	}
 }
+void Program::use() const
+{
+	glUseProgram(id);
+}
 
 Texture2D::Texture2D(unsigned width, unsigned height, uint8_t * const data)
 {

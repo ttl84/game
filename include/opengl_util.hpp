@@ -50,6 +50,8 @@ public:
 	~Program();
 	Program(const Program& other) = delete;
 	Program & operator=(const Program& other) = delete;
+
+	void use() const;
 };
 
 // Wrapper for 2D RGBA unsigned byte textures.

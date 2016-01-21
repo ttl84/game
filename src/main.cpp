@@ -90,7 +90,7 @@ int run()
 	glGenVertexArrays(1, &VAO);
 
 	glBindVertexArray(VAO);
-		glUseProgram(program.id);
+		program.use();
 
 		quads.setupVertexFormat(0);
 		quads.setupTextureCoordinateFormat(1);
